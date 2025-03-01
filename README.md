@@ -1,6 +1,7 @@
 # Using-AI-Tools
-### 1. whisperAI
-audio2text
+### [PDFMathTranslate](https://github.com/Byaidu/PDFMathTranslate)
+Translate
 
-### 2. PDFMathTranslate
-논문 번역
+### [whisperAI](https://github.com/openai/whisper)
+Speech to Text
+
