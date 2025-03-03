@@ -7,13 +7,16 @@ Speech to Text
 
 - 구조
 ```sh
-main.py
+
 app
 ├─common
 │  └─config.py
-└─routes
-   └─translate.py
-
+├─routes
+│  ├─translate.py
+│  └─speech2text.py
+├─services
+│  └─llm_models.py
+└─main.py
 ```
 
 - 환경설정
