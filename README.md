@@ -30,3 +30,23 @@ pip install python-dotenv uvicorn fastapi
 # 실행
 uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
+
+- whisperAI 관련 환경 설정
+```sh
+cd USING-AI-TOOLS
+pip install ./whisperAI
+
+# or
+
+# pip install -U openai-whisper
+```
+
+- PDFMathTranslate 관련 환경 설정
+```sh
+cd USING-AI-TOOLS
+pip install ./PDFMathTranslate
+
+# or
+
+# pip install pdf2zh
+```
