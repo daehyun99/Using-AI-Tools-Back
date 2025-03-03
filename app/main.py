@@ -1,19 +1,27 @@
-# ===============
-# test code
 from typing import Union
 
+import uvicorn
 from fastapi import FastAPI
 
-app = FastAPI()
+from app.common import config
+from app.routes import translate
+
+def create_app():
+    """
+    앱 함수 실행
+    :return:
+    """
+    app = FastAPI()
+    
+    # 라우터 정의
+    app.include_router(translate.router, tags=["Translate"])
+
+    return app
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+app = create_app()
 
-# ===============
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
