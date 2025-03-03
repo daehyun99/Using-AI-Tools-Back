@@ -5,4 +5,4 @@ load_dotenv()
 
 DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
 
-whisperAI_MODEL_NAME = 'tiny'
+whisperAI_MODEL_NAME = os.getenv("WHISPER_MODEL_NAME", "tiny")
