@@ -14,6 +14,10 @@ def create_app():
     """
     app = FastAPI(lifespan=lifespan)
     
+    # 미들웨어 정의
+
+
+    
     # 라우터 정의
     app.include_router(translate.router, tags=["Translate"])
     app.include_router(speech2text.router, tags=["Speech to Text"])
