@@ -3,6 +3,11 @@ from typing import Union
 
 from app.services.llm_models import whisperAI_model
 
+from app.models import VideoURL
+from app.services.video_downloader import download_video
+
+from app.errors.exceptions import APIException, FailDownloadVideo
+
 
 router = APIRouter()
 
@@ -15,7 +20,7 @@ router = APIRouter()
 # ⚪ (+) 모델 사이즈 변경 필요 
 
 # # 관련
-# python-docx, ffmpeg
+# python-docx, ffmpeg, yt_dlp
 # ========================
 
 # <======================>
@@ -26,18 +31,27 @@ router = APIRouter()
 # 3. 시스템은 speech2text를 수행한 (Word or PDF) 파일을 제공한다.
 # ========================
 
-# @router
-# async def whisper():
+@router.put("/download/")
+async def whisper(video_url: VideoURL):
+    """
+    영상 다운로드 API
+    :param video_url: video url
+    :return: video
+    """
     
-#     # video_url 확인
+    # 모델 로드 확인
 
-#     # 모델 로드 확인
+    # video 다운로드
+    try:
+        print(f"🚩 영상 다운로드 시작 : {video_url.url}")
+        download_video(video_url= video_url.url)
+    except Exception as e:
+        raise FailDownloadVideo()
 
-#     # video 다운로드
+    
+    # speech2text 수행
 
-#     # speech2text 수행
-
-#     # (Word or PDF) 파일 제공
+    # (Word or PDF) 파일 제공
 
 
 # # ===============

@@ -39,3 +39,17 @@ class FailLoadLLM(APIException):
         )
     def __str__(self):
         return f"{self.code} - {self.msg}"
+
+
+class FailDownloadVideo(APIException):
+    def __init__(self, ex: Exception = None):
+        super().__init__(
+            status_code=StatusCode.HTTP_500,
+            msg=f"영상 다운로드 실패",
+            code=f"{StatusCode.HTTP_500}{'2'.zfill(4)}",
+            ex=ex,
+        )
+    def __str__(self):
+        return f"{self.code} - {self.msg}"
+    
+
