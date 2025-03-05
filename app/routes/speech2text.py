@@ -44,8 +44,8 @@ async def whisper(video_url: VideoURL):
     # video 다운로드
     try:
         print(f"🚩 영상 다운로드 시작 : {video_url.url}")
-        download_video(video_url= video_url.url)
     except Exception as e:
+        print(f"Error during download: {e}") # Log the exception
         raise FailDownloadVideo()
 
     
