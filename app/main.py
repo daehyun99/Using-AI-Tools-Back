@@ -1,9 +1,9 @@
+from app.common import config
+
 from typing import Union
 
 import uvicorn
 from fastapi import FastAPI
-
-from app.common import config
 from app.routes import speech2text, translate
 from app.services.llm_models import lifespan
 

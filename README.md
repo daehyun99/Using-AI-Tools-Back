@@ -11,6 +11,8 @@ Speech to Text
 app
 ├─common
 │  └─config.py
+├─errors
+│  └─exceptions.py
 ├─routes
 │  ├─translate.py
 │  └─speech2text.py
