@@ -32,6 +32,9 @@ conda activate AI-tools
 # 패키지 설치
 pip install python-dotenv uvicorn fastapi
 
+# Speech-to-Text
+pip install python-docx ffmpeg yt_dlp
+
 # 실행
 uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
