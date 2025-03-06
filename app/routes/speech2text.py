@@ -60,9 +60,7 @@ async def whisper(video_url: VideoURL):
     try:
         delete_video(video_url.url)
         print(f"🚩 영상 삭제 완료 : {video_url.url}")
-    except Exception as e:
-        print(f"Error during delete: {e}") # Log the exception
-        raise FailDownloadVideo(ex=e)
+        raise FailDeleteVideo(ex=e)
 
 
 
