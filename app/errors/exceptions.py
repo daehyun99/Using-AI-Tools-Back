@@ -52,4 +52,14 @@ class FailDownloadVideo(APIException):
     def __str__(self):
         return f"{self.code} - {self.msg}"
     
+class FailDeleteVideo(APIException):
+    def __init__(self, ex: Exception = None):
+        super().__init__(
+            status_code=StatusCode.HTTP_500,
+            msg=f"영상 삭제 실패",
+            code=f"{StatusCode.HTTP_500}{'3'.zfill(4)}",
+            ex=ex,
+        )
+    def __str__(self):
+        return f"{self.code} - {self.msg}"
 

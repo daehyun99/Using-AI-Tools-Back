@@ -4,7 +4,7 @@ from typing import Union
 from app.services.llm_models import whisperAI_model
 
 from app.models import VideoURL
-from app.services.video_downloader import download_video
+from app.services.video_downloader import download_video, delete_video
 
 from app.errors.exceptions import APIException, FailDownloadVideo
 
@@ -34,14 +34,14 @@ router = APIRouter()
 @router.put("/download/")
 async def whisper(video_url: VideoURL):
     """
-    영상 다운로드 API
+    Speech2Text API
     :param video_url: video url
-    :return: video
+    :return: DOCS
     """
     
     # 모델 로드 확인
 
-    # video 다운로드
+    # video 다운로드(temp)
     try:
         print(f"🚩 영상 다운로드 시작 : {video_url.url}")
         download_video(video_url.url)
@@ -51,6 +51,18 @@ async def whisper(video_url: VideoURL):
 
     
     # speech2text 수행
+
+    # video 삭제(temp)
+    
+    # 영상 삭제 테스트용 코드
+    # import time
+    # time.sleep(5)
+    try:
+        delete_video(video_url.url)
+        print(f"🚩 영상 삭제 완료 : {video_url.url}")
+        raise FailDeleteVideo(ex=e)
+
+
 
     # (Word or PDF) 파일 제공
 
