@@ -12,6 +12,10 @@ def download_video(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
         ydl.download([video_url])
         
 def delete_video(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
-    # os.remove(f'{VIDEO_SAVE_PATH}temp.%(ext)s') # 확장자명 처리 방법 고민
-    os.remove(f'{VIDEO_SAVE_PATH}temp.mp4') # 임시
+    try:
+        os.remove(f'{VIDEO_SAVE_PATH}temp.mp4') # 임시
+    except FileNotFoundError:
+        print(f"File not found: {VIDEO_SAVE_PATH}temp.mp4")
+    except Exception as e:
+        print(f"Error deleting video: {e}")
 
