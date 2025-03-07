@@ -32,10 +32,10 @@ conda create -n AI-tools python=3.10
 conda activate AI-tools
 
 # 패키지 설치
-pip install python-dotenv uvicorn fastapi
+pip install python-dotenv uvicorn fastapi pdf2zh openai-whisper
 
 # Speech-to-Text
-pip install python-docx yt_dlp imageio[ffmpeg]
+pip install python-docx yt_dlp ffmpeg
 
 # 실행
 uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
@@ -59,4 +59,8 @@ pip install ./PDFMathTranslate
 # or
 
 # pip install pdf2zh
+```
+
+```
+docker build -t kimdaehyun99/fastapi-server:latest --load .
 ```

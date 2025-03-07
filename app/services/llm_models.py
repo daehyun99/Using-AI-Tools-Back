@@ -1,9 +1,8 @@
 from app.common.config import whisperAI_MODEL_NAME
 
 import sys
-import whisperAI
-import whisperAI.whisper
-import whisperAI.whisper.utils
+import whisper
+import whisper.utils
 
 from app.errors import exceptions as ex
 from app.errors.exceptions import APIException, FailLoadLLM
@@ -19,7 +18,7 @@ async def lifespan(app):
     try:
         # whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
         print("모델 로드 전 : ", whisperAI_model)
-        whisperAI_model = whisperAI.whisper.load_model(f"{whisperAI_MODEL_NAME}")
+        whisperAI_model = whisper.load_model(f"{whisperAI_MODEL_NAME}")
         print("🚩 whisper 모델 로드")
         print("모델 로드 후 : ", whisperAI_model)
     except Exception as e:
