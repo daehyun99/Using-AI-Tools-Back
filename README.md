@@ -35,7 +35,7 @@ conda activate AI-tools
 pip install python-dotenv uvicorn fastapi
 
 # Speech-to-Text
-pip install python-docx ffmpeg yt_dlp
+pip install python-docx yt_dlp imageio[ffmpeg]
 
 # 실행
 uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload

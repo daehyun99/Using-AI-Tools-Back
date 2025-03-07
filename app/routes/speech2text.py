@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from typing import Union
+from docx import Document
 
 from app.services.llm_models import whisperAI_model
 
 from app.models import VideoURL
+from app.common.config import VIDEO_SAVE_PATH
 from app.services.video_downloader import download_video, delete_video
 
-from app.errors.exceptions import APIException, FailDownloadVideo
+from app.errors.exceptions import APIException, FailDownloadVideo, FailDeleteVideo
 
 
 router = APIRouter()
@@ -15,8 +17,14 @@ router = APIRouter()
 # # Todo
 # 진행상황
 # |✅: 완료|⏩: 진행 중|⏸: 중단|⚪: 대기|
-# ⏩ 1. video_url의 video 영상 다운로드
-# ⚪ 2. whisperAI 모델 cahce 필요
+# ✅ 1. video_url의 video 영상 다운로드
+# ✅ 2. whisperAI 모델 cahce 필요 (자동 지정)
+# ⏩ 3. speech2text 수행
+# ⚪ 4. 저장할 파일명 지정
+# ⚪ 4. (Word or PDF) 형태로 파일 저장
+# ⚪ 5. 저장된 파일을 사용자에게 제공
+# ✅ . video 영상 삭제
+# ⚪ (+) 로깅 기능 추가
 # ⚪ (+) 모델 사이즈 변경 필요 
 
 # # 관련
@@ -51,7 +59,12 @@ async def whisper(video_url: VideoURL):
 
     
     # speech2text 수행
+    result = whisperAI_model.transcribe(f"{VIDEO_SAVE_PATH}temp.mp4", task="transcribe")
 
+
+    doc = Document()
+    doc.add_paragraph(result['text'])
+    doc.save(f"{VIDEO_SAVE_PATH}/test_result.docx")
     # video 삭제(temp)
     
     # 영상 삭제 테스트용 코드
@@ -60,6 +73,8 @@ async def whisper(video_url: VideoURL):
     try:
         delete_video(video_url.url)
         print(f"🚩 영상 삭제 완료 : {video_url.url}")
+    except Exception as e:
+        print(f"Error during delete: {e}") # Log the exception
         raise FailDeleteVideo(ex=e)
 
 
