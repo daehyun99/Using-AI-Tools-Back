@@ -19,7 +19,7 @@ def download_video(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
             if video_title and video_ext:
                 return f"{VIDEO_SAVE_PATH}/{video_title}.{video_ext}"
             else:
-                return "error"
+                raise Exception("Could not retrieve video title or extension")
     
     except Exception as e:
         raise e
