@@ -1,11 +1,16 @@
 import sys, os
+from os import path, environ
 from dotenv import load_dotenv
+
+base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+
 
 load_dotenv()
 
 DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
 
 VIDEO_SAVE_PATH = os.getenv("VIDEO_SAVE_PATH", "app/tmp/videos/")
+# VIDEO_SAVE_PATH = os.getenv("VIDEO_SAVE_PATH", f"{base_dir}/app/tmp/videos/")
 DOCS_SAVE_PATH = os.getenv("DOCS_SAVE_PATH", "app/tmp/docs/")
 
 whisperAI_MODEL_NAME = os.getenv("WHISPER_MODEL_NAME", "tiny")

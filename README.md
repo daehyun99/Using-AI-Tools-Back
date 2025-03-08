@@ -42,6 +42,11 @@ pip install -y python-dotenv uvicorn fastapi pdf2zh openai-whisper python-docx y
 ```
 
 ```
+- 저장 경로 설정
+```
+app/tmp/docs
+app/tmp/videos
+```
 
 ### 실행
 ```
