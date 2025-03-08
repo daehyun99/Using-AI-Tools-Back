@@ -40,7 +40,19 @@ pip install -y python-dotenv uvicorn fastapi pdf2zh openai-whisper python-docx y
 ### 추가 설정
 - .env 생성 및 설정
 ```
+DEEPL_API_KEY = ""
 
+PYTHON_DONT_WRITE_BYTECODE = "True"
+
+ENV = "development"
+
+VIDEO_SAVE_PATH = ""app/tmp/videos/""
+
+DOCS_SAVE_PATH = "app/tmp/docs/"
+
+whisperAI_MODEL_NAME = "tiny"
+
+PYTHON_DONT_WRITE_BYTECODE = "true"
 ```
 - 저장 경로 설정
 ```

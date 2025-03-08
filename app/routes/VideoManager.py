@@ -32,7 +32,13 @@ def rename(video: VideoDelete):
     :param VideoDelete:
     :return:
     """
-    rename_video(video.path)
+    try:
+        video_path = rename_video(video.path)
+    except Exception as e:
+        print(f"Error during rename: {e}")
+    ...
+    return f"[영상 제목 변경 완료] path : {video.path}"
+
 
 @router.delete("/delete/")
 async def delete(video: VideoDelete):
@@ -45,4 +51,5 @@ async def delete(video: VideoDelete):
         delete_video(video.path)
         print(f"🚩 영상 삭제 완료 : {video.path}")
     except Exception as e:
-        print(f"Error during delete: {e}") # Log the exception
+        print(f"Error during delete: {e}")
+    return f"[영상 삭제 완료] path : {video.path}"

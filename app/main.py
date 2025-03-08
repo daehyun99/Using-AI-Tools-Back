@@ -1,4 +1,5 @@
 from app.common import config
+from app.common.config import ENV
 
 from typing import Union
 
@@ -23,7 +24,7 @@ def create_app():
 
 
 
-    # 개발용 라우터 정의
+
     # 개발용 라우터 정의
     if ENV == "development": 
         app.include_router(VideoManager.router, tags=["VideoManager"])
@@ -35,8 +36,6 @@ def create_app():
         # app.include_router(PipeLine.router, tags=["PipeLine"])
         ...
     
-    # 배포용 라우터 정의
-    # app.include_router(PipeLine.router, tags=["PipeLine"])
 
     return app
 
