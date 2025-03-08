@@ -24,6 +24,7 @@ app
 ```
 
 - 환경설정
+- [FFmpeg 설치 필요](https://www.ffmpeg.org/download.html)
 ```sh
 # 가상환경 생성
 conda create -n AI-tools python=3.10
@@ -32,35 +33,24 @@ conda create -n AI-tools python=3.10
 conda activate AI-tools
 
 # 패키지 설치
-pip install python-dotenv uvicorn fastapi pdf2zh openai-whisper
+pip install -y python-dotenv uvicorn fastapi pdf2zh openai-whisper python-docx yt_dlp ffmpeg
+# (or) pip install -r requirements.txt
+```
 
-# Speech-to-Text
-pip install python-docx yt_dlp ffmpeg
+### 추가 설정
+- .env 생성 및 설정
+```
 
-# 실행
+```
+
+### 실행
+```
 uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-- whisperAI 관련 환경 설정
-```sh
-cd USING-AI-TOOLS
-pip install ./whisperAI
-
-# or
-
-# pip install -U openai-whisper
-```
-
-- PDFMathTranslate 관련 환경 설정
-```sh
-cd USING-AI-TOOLS
-pip install ./PDFMathTranslate
-
-# or
-
-# pip install pdf2zh
-```
-
+- 도커 배포
 ```
 docker build -t kimdaehyun99/fastapi-server:latest --load .
+
+docker run -d -p 8000:8000 kimdaehyun99/fastapi-server:latest
 ```
