@@ -7,6 +7,8 @@ base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 
 load_dotenv()
 
+ENV = os.getenv("ENV", "development") # "production" or "development"
+
 DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 

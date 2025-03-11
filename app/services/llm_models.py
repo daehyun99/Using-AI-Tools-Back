@@ -40,14 +40,10 @@ async def lifespan(app):
     global whisperAI_model
     try:
         # whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
-        print("모델 로드 전 : ", whisperAI_model)
         whisperAI_model = whisper.load_model(f"{whisperAI_MODEL_NAME}")
         print("🚩 whisper 모델 로드")
-        print("모델 로드 후 : ", whisperAI_model)
     except Exception as e:
-        # whisperAI_model = None
         raise ex.FailLoadLLM()
 
     yield
-    # whisperAI_model = None
-    # print("🚩 whisper 모델 로드 해제")
+    print("🚩 whisper 모델 로드 해제")
