@@ -10,3 +10,7 @@ class VideoDownload(BaseModel):
 class VideoDelete(BaseModel):
     """Video 삭제용 모델"""
     path: Optional[str] = None
+
+class VideoRename(BaseModel):
+    """Video 이름변경용 모델"""
+    path: Optional[str] = None

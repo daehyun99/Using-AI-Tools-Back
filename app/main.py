@@ -32,7 +32,7 @@ def create_app():
         # app.include_router(Translater.router, tags=["Translate"])
 
     # 배포용 라우터 정의
-    else: 
+    elif ENV == "production": 
         # app.include_router(PipeLine.router, tags=["PipeLine"])
         ...
     
