@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.models import VideoDownload, VideoDelete
+from app.models import VideoRename, VideoDownload, VideoDelete
 from app.services.videomanage import download_video, delete_video, rename_video
 from app.common.config import VIDEO_SAVE_PATH, DOCS_SAVE_PATH
 
@@ -26,10 +26,10 @@ async def download(video: VideoDownload):
     return f"[영상 다운로드 완료] path : {video_path}"
 
 @router.get("/rename")
-def rename(video: VideoDelete):
+def rename(video: VideoRename):
     """
     `Video API`
-    :param VideoDelete:
+    :param VideoRename:
     :return:
     """
     rename_video(video.path)

@@ -8,6 +8,7 @@ base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 load_dotenv()
 
 DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 VIDEO_SAVE_PATH = os.getenv("VIDEO_SAVE_PATH", "app/tmp/videos/")
 # VIDEO_SAVE_PATH = os.getenv("VIDEO_SAVE_PATH", f"{base_dir}/app/tmp/videos/")

@@ -1,6 +1,7 @@
-from app.common.config import whisperAI_MODEL_NAME
+from app.common.config import whisperAI_MODEL_NAME, OPENAI_API_KEY
 
 import sys
+import openai
 import whisper
 import whisper.utils
 
@@ -11,6 +12,28 @@ from app.errors.exceptions import APIException, FailLoadLLM
 from contextlib import asynccontextmanager
 
 whisperAI_model = None
+
+client = openai.OpenAI(
+        api_key=OPENAI_API_KEY,
+    )
+
+
+def VideoTitleEditer(sentences):
+    response = client.chat.completions.create(
+        model= "gpt-4o-mini",
+        messages=[
+            {"role": "system",
+             "content":"""당신은 유튜브 영상 제목을 자동으로 수정하는 AI입니다.
+             사용자가 제공한 제목에서 빈 칸, 큰따옴표("), 특수 문자(“) 등을 제거하고, 의미는 유지하면서 자연스럽게 수정하세요.
+             가능한 한 원본 제목과 유사한 형태를 유지하되, 필요한 경우 대체 문자를 사용하세요.
+             """},
+             {"role": "user", "content": f"{sentences}"}],
+        temperature = 0.1,
+        top_p = 0.1
+    )
+    response_ = response.choices[0].message.content
+    return response_
+
 
 @asynccontextmanager
 async def lifespan(app):
