@@ -14,3 +14,14 @@ class Video(BaseModel):
                 "url": "https://www.youtube.com/"
             }
         }
+
+class Document(BaseModel):
+    """Document 반환용 모델"""
+    path: Optional[str] = None
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "path": "app/tmp/docs/test_result.docx"
+            }
+        }
