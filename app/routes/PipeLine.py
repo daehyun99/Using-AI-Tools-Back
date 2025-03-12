@@ -4,11 +4,13 @@ from docx import Document
 from app.services.llm_models import get_whisper_model
 
 from app.routes.VideoManager import download, rename, delete
-from app.models import Video
+from app.routes.FileManager import download_file
+from app.models import Video, Document_
+from fastapi.responses import FileResponse
 
 router = APIRouter()
 
-@router.put("/Speech-to-Text")
+@router.post("/Speech-to-Text/", response_class=FileResponse)
 async def Speech2Text(video: Video):
     """
     `Pipeline API`
@@ -31,4 +33,8 @@ async def Speech2Text(video: Video):
 
     await delete(video)
 
-    return {f"[Speech-to-Text 완료] path : {video}"}
+    document = Document_
+    document.path = f"{DOCS_SAVE_PATH}/{video.title}.docx"
+    await download_file(document)
+
+    return FileResponse(path=document.path, filename=f"{video.title}.docx")

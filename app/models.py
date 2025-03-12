@@ -15,7 +15,7 @@ class Video(BaseModel):
             }
         }
 
-class Document(BaseModel):
+class Document_(BaseModel):
     """Document 반환용 모델"""
     path: Optional[str] = None
 

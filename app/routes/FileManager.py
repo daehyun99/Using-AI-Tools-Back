@@ -1,14 +1,14 @@
 import os
 from fastapi import APIRouter
 
-from app.models import Document
+from app.models import Document_
 from fastapi.responses import FileResponse
 
 router = APIRouter(prefix="/file")
 
 
 @router.post("/download/", response_class=FileResponse)
-async def download_file(document: Document):
+async def download_file(document: Document_):
     """
     `File API`
     :param docs_path:
