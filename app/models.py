@@ -2,15 +2,15 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-class VideoDownload(BaseModel):
-    """Video 다운로드용 모델"""
+class Video(BaseModel):
+    """Video Speech-to-Text용 모델"""
     url: Optional[str] = None
-
-
-class VideoDelete(BaseModel):
-    """Video 삭제용 모델"""
     path: Optional[str] = None
+    title: Optional[str] = None
 
-class VideoRename(BaseModel):
-    """Video 이름변경용 모델"""
-    path: Optional[str] = None
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "url": "https://www.youtube.com/"
+            }
+        }

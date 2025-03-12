@@ -42,6 +42,8 @@ pip install -y python-dotenv uvicorn fastapi pdf2zh openai-whisper python-docx y
 ```
 DEEPL_API_KEY = ""
 
+OPENAI_API_KEY = ""
+
 PYTHON_DONT_WRITE_BYTECODE = "True"
 
 ENV = "development"
