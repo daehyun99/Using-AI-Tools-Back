@@ -11,12 +11,18 @@ from app.errors.exceptions import APIException, FailLoadLLM
 
 from contextlib import asynccontextmanager
 
-whisperAI_model = None
 
 client = openai.OpenAI(
         api_key=OPENAI_API_KEY,
     )
 
+
+whisperAI_model = None
+
+def get_whisper_model():
+    if whisperAI_model is None:
+        raise RuntimeError("🚨 whisper 모델이 아직 로드되지 않았습니다.")
+    return whisperAI_model
 
 def VideoTitleEditer(sentences):
     response = client.chat.completions.create(
@@ -42,8 +48,9 @@ async def lifespan(app):
         # whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
         whisperAI_model = whisper.load_model(f"{whisperAI_MODEL_NAME}")
         print("🚩 whisper 모델 로드")
+        yield
     except Exception as e:
         raise ex.FailLoadLLM()
-
-    yield
-    print("🚩 whisper 모델 로드 해제")
+    finally:
+        whisperAI_model = None
+        print("🚩 whisper 모델 로드 해제")

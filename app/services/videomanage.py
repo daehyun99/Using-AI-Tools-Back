@@ -46,6 +46,7 @@ def rename_video(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
         - 이슈 이름 :유튜브 영상 제목 변경 시 오류 발생 #9
         - 링크 : https://github.com/daehyun99/Using-AI-Tools/issues/9
     """
+<<<<<<< HEAD
     # base_name = os.path.basename(video_path)
     # video_title, video_ext = os.path.splitext(base_name)
     # video_title = re.sub(r'[\\/*?:"<>|]', '', video_title).strip()
@@ -56,3 +57,12 @@ def rename_video(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
     # return new_video_path
     
     
+=======
+    base_name = os.path.basename(video_path)
+    video_title, video_ext = os.path.splitext(base_name)
+    video_title = re.sub(r'[\\/*?:"<>|]', '', video_title).strip()
+    new_video_title = VideoTitleEditer(sentences = video_title)
+    new_video_path = os.path.join(VIDEO_SAVE_PATH, f"{new_video_title}{video_ext}")
+    os.rename(video_path, new_video_path)
+    return [new_video_path, new_video_title]
+>>>>>>> 9fa9f9d (Feat: 파이프라인 작성(Speech-to-Text))

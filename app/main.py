@@ -9,7 +9,7 @@ from app.routes import PipeLine
 from app.services.llm_models import lifespan
 
 # 개발용
-from app.routes import SpeechToTexter, Translater, VideoManager
+from app.routes import Translater, VideoManager
 
 
 def create_app():
@@ -28,7 +28,7 @@ def create_app():
     # 개발용 라우터 정의
     if ENV == "development": 
         app.include_router(VideoManager.router, tags=["VideoManager"])
-        # app.include_router(SpeechToTexter.router, tags=["Speech to Text"])
+        app.include_router(PipeLine.router, tags=["PipeLine"])
         # app.include_router(Translater.router, tags=["Translate"])
 
     # 배포용 라우터 정의
