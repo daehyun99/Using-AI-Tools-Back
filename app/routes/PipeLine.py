@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-from fastapi import APIRouter
-
-
-
-router = APIRouter()
-=======
 from app.common.config import DOCS_SAVE_PATH
 from fastapi import APIRouter
 from docx import Document
@@ -39,4 +32,3 @@ async def Speech2Text(video: Video):
     await delete(video)
 
     return {f"[Speech-to-Text 완료] path : {video}"}
->>>>>>> 9fa9f9d (Feat: 파이프라인 작성(Speech-to-Text))
