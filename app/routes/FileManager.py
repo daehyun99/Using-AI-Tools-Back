@@ -14,5 +14,9 @@ async def download_file(document: Document_):
     :param docs_path:
     :return docs:
     """
-    document_name = os.path.basename(document.path)
-    return FileResponse(path=document.path, filename=f"{document_name}")
+    try:
+        document_name = os.path.basename(document.path)
+        return FileResponse(path=document.path, filename=f"{document_name}")
+    except Exception as e:
+        return {"error": f"Error during download_file: {e}"}
+    

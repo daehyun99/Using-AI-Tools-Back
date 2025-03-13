@@ -33,8 +33,5 @@ async def Speech2Text(video: Video):
 
     await delete(video)
 
-    document = Document_
-    document.path = f"{DOCS_SAVE_PATH}/{video.title}.docx"
-    await download_file(document)
-
+    document = Document_(path=f"{DOCS_SAVE_PATH}/{video.title}.docx")
     return FileResponse(path=document.path, filename=f"{video.title}.docx")
