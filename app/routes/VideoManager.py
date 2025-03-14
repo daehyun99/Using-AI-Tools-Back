@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.models import Video
-from app.services.videomanage import download_video, delete_video, rename_video
+from app.services.videomanage import download_video_, delete_video_, rename_video_
 from app.common.config import VIDEO_SAVE_PATH, DOCS_SAVE_PATH
 
 from app.errors.exceptions import APIException, FailDownloadVideo
@@ -12,21 +12,21 @@ router = APIRouter(prefix="/video")
 
 
 @router.put("/download/")
-async def download(video: Video):
+async def download_video(video: Video):
     """
     `Video API`
     :param VideoDownload:
     :return video_path:
     """
     try:
-        video_path = download_video(video.url)
+        video_path = download_video_(video.url)
         
     except Exception as e:
         raise FailDownloadVideo(ex=e)
     return {"video_path": video_path, "message": f"[영상 다운로드 완료]"}
 
 @router.get("/rename")
-async def rename(video: Video):
+async def rename_video(video: Video):
     """
     `Video API`
     :param VideoRename:
@@ -34,7 +34,7 @@ async def rename(video: Video):
     """
     video_ = None
     try:
-        video_ = rename_video(video.path)
+        video_ = rename_video_(video.path)
     except Exception as e:
         print(f"Error during rename: {e}")
     ...
@@ -42,14 +42,14 @@ async def rename(video: Video):
 
 
 @router.delete("/delete/")
-async def delete(video: Video):
+async def delete_video(video: Video):
     """
     `Video API`
     :param VideoDelete:
     :return:
     """
     try:
-        delete_video(video.path)
+        delete_video_(video.path)
         print(f"🚩 영상 삭제 완료 : {video.path}")
     except Exception as e:
         print(f"Error during delete: {e}")
