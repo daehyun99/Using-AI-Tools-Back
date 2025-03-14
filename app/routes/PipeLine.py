@@ -35,8 +35,9 @@ async def Speech2Text(video: Video, backgroundtasks: BackgroundTasks):
 
     await delete_video(video)
     
-    
-
-    backgroundtasks.add_task(delete_file, document)
+    try:
+        backgroundtasks.add_task(delete_file, document)
+    except Exception as e:
+        print(f"Error adding background task: {e}")
 
     return FileResponse(path=document.path, filename=f"{video.title}.docx")
