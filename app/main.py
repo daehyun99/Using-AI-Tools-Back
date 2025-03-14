@@ -5,11 +5,11 @@ from typing import Union
 
 import uvicorn
 from fastapi import FastAPI
-from app.routes import PipeLine
+from app.routes import PipeLine, TranslateManager
 from app.services.llm_models import lifespan
 
 # 개발용
-from app.routes import Translater, VideoManager, FileManager
+from app.routes import VideoManager, FileManager
 
 
 def create_app():
@@ -29,8 +29,8 @@ def create_app():
     if ENV == "development": 
         app.include_router(VideoManager.router, tags=["VideoManager"])
         app.include_router(FileManager.router, tags=["FileManager"])
-        app.include_router(PipeLine.router, tags=["PipeLine"])
-        # app.include_router(Translater.router, tags=["Translate"])
+        # app.include_router(PipeLine.router, tags=["PipeLine"])
+        app.include_router(TranslateManager.router, tags=["Translate"])
 
     # 배포용 라우터 정의
     elif ENV == "production": 
