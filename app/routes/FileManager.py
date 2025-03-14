@@ -1,10 +1,9 @@
 from fastapi import APIRouter
 from fastapi import FastAPI, UploadFile
 
-import os, aiofiles
+import os
 from app.models import Document_
-from app.services.filemanage import delete_file_
-from app.common.config import DOCS_SAVE_PATH
+from app.services.filemanage import delete_file_, upload_file_
 
 from fastapi.responses import FileResponse
 
@@ -38,16 +37,16 @@ async def delete_file(document: Document_):
     return {"message": f"[문서 삭제 완료]"}
 
 @router.post("/upload/")
-async def upload_file(file: UploadFile, DOCS_SAVE_PATH=DOCS_SAVE_PATH):
+async def upload_file(file: UploadFile):
     """
     `File API`
-    :param file:
+    :param UploadFile:
     :return:
     """
-    file_path = f"{DOCS_SAVE_PATH}/{file.filename}"
+    try:
+        file_path = await upload_file_(file)
+        print(f"🚩 문서 업로드 완료 : {file_path}")
+    except Exception as e:
+        print(f"Error during delete: {e}")
 
-    async with aiofiles.open(file_path, 'wb') as out_file:
-        content = await file.read()
-        await out_file.write(content)
-
-    return {"file_path": file_path, "message": "[파일 업로드 완료]"}
+    return {"file_path": file_path, "message": "[문서 업로드 완료]"}
