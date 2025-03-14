@@ -6,7 +6,7 @@ from app.common.config import VIDEO_SAVE_PATH, base_dir
 from app.services.llm_models import VideoTitleEditer
 
 
-def download_video(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
+def download_video_(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
     ydl_opts = {
         'outtmpl': f'{VIDEO_SAVE_PATH}/%(title)s.%(ext)s',
     }
@@ -28,7 +28,7 @@ def download_video(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
     except Exception as e:
         raise e
         
-def delete_video(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
+def delete_video_(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
     try:
         os.remove(f'{video_path}')
     except FileNotFoundError:
@@ -37,7 +37,7 @@ def delete_video(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
         print(f"Error deleting video: {e}")
 
 
-def rename_video(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
+def rename_video_(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
     """
     영상(video)의 제목(title)에 큰따옴표(") 또는 처리 불가능한 문자(ex - “)가 있는 경우, whisper 모델에서 처리 불가한 문제 발생.
     해당 문제를 해결하기 위해 영상의 제목을 변경하는 함수.
