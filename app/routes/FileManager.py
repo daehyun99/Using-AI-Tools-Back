@@ -1,13 +1,13 @@
 from fastapi import APIRouter
+from fastapi import FastAPI, UploadFile
 
 import os
 from app.models import Document_
-from app.services.filemanage import delete_file_
+from app.services.filemanage import delete_file_, upload_file_
 
 from fastapi.responses import FileResponse
 
 router = APIRouter(prefix="/file")
-
 
 @router.post("/download/", response_class=FileResponse)
 async def download_file(document: Document_):
@@ -35,3 +35,18 @@ async def delete_file(document: Document_):
     except Exception as e:
         print(f"Error during delete: {e}")
     return {"message": f"[문서 삭제 완료]"}
+
+@router.post("/upload/")
+async def upload_file(file: UploadFile):
+    """
+    `File API`
+    :param UploadFile:
+    :return:
+    """
+    try:
+        await upload_file_(file)
+        print(f"🚩 문서 업로드 완료")
+    except Exception as e:
+        print(f"Error during upload: {e}") # TODO: logging 추가, Error handling 추가
+
+    return {"message": "[문서 업로드 완료]"}
