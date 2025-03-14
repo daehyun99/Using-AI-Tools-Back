@@ -12,11 +12,11 @@ def delete_file_(file_path):
     except Exception as e:
         raise Exception(f"Error deleting video: {e}")
     
-def upload_file_(file, DOCS_SAVE_PATH=DOCS_SAVE_PATH):
+
+async def upload_file_(file, DOCS_SAVE_PATH=DOCS_SAVE_PATH):
 
     file_path = f"{DOCS_SAVE_PATH}/{file.filename}"
 
-    with aiofiles.open(file_path, 'wb') as out_file:
-        content = file.read()
-        out_file.write(content)
-    return file_path
+    async with aiofiles.open(file_path, 'wb') as out_file:
+        content = await file.read()
+        await out_file.write(content)

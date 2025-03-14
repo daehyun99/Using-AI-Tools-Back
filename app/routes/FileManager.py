@@ -44,9 +44,9 @@ async def upload_file(file: UploadFile):
     :return:
     """
     try:
-        file_path = await upload_file_(file)
-        print(f"🚩 문서 업로드 완료 : {file_path}")
+        await upload_file_(file)
+        print(f"🚩 문서 업로드 완료")
     except Exception as e:
         print(f"Error during delete: {e}")
 
-    return {"file_path": file_path, "message": "[문서 업로드 완료]"}
+    return {"message": "[문서 업로드 완료]"}
