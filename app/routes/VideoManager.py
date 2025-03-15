@@ -25,7 +25,7 @@ async def download_video(video: Video):
         raise FailDownloadVideo(ex=e)
     return {"video_path": video_path, "message": f"[영상 다운로드 완료]"}
 
-@router.get("/rename")
+@router.get("/rename/")
 async def rename_video(video: Video):
     """
     `Video API`
