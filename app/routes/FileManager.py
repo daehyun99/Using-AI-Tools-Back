@@ -47,7 +47,7 @@ async def upload_file(file: UploadFile):
         await upload_file_(file)
         print(f"🚩 문서 업로드 완료")
     except Exception as e:
-        print(f"Error during delete: {e}")
+        print(f"Error during upload: {e}") # TODO: logging 추가, Error handling 추가
 
     return {"message": "[문서 업로드 완료]"}
 
