@@ -10,7 +10,12 @@ load_dotenv()
 ENV = os.getenv("ENV", "development") # "production" or "development"
 
 DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
+
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 
 VIDEO_SAVE_PATH = os.getenv("VIDEO_SAVE_PATH", "app/tmp/videos/")
 # VIDEO_SAVE_PATH = os.getenv("VIDEO_SAVE_PATH", f"{base_dir}/app/tmp/videos/")
