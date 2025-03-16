@@ -11,7 +11,7 @@ from app.services.llm_models import whisperAI_model
 router = APIRouter(prefix="/video")
 
 
-@router.put("/download/")
+@router.post("/download/")
 async def download_video(video: Video):
     """
     `Video API`
@@ -25,7 +25,7 @@ async def download_video(video: Video):
         raise FailDownloadVideo(ex=e)
     return {"video_path": video_path, "message": f"[영상 다운로드 완료]"}
 
-@router.get("/rename")
+@router.put("/rename/")
 async def rename_video(video: Video):
     """
     `Video API`
@@ -34,10 +34,10 @@ async def rename_video(video: Video):
     """
     video_ = None
     try:
-        video_ = rename_video_(video.path)
+        video_ = await rename_video_(video.path)
     except Exception as e:
         print(f"Error during rename: {e}")
-    ...
+    
     return {"video_path": video_[0], "video_title": video_[1], "message": f"[영상 제목 변경 완료]"}
 
 

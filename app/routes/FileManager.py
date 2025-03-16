@@ -3,7 +3,7 @@ from fastapi import FastAPI, UploadFile
 
 import os
 from app.models import Document_
-from app.services.filemanage import delete_file_, upload_file_
+from app.services.filemanage import delete_file_, upload_file_, rename_file_
 
 from fastapi.responses import FileResponse
 
@@ -50,3 +50,15 @@ async def upload_file(file: UploadFile):
         print(f"Error during upload: {e}") # TODO: logging 추가, Error handling 추가
 
     return {"message": "[문서 업로드 완료]"}
+
+@router.get("/rename/")
+async def rename_file(document: Document_):
+    """
+    `File API`
+    :param Document_:
+    :return:
+    """
+    try:
+        rename_file_()
+    except:
+        ...
