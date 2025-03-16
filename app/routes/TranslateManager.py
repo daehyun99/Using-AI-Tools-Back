@@ -19,7 +19,7 @@ async def translate(document: Document_, service: TranslateService):
     :return:
     """
     try:
-        new_document_title_ext, new_document_path = await translate_(document.path, service)
-        return FileResponse(path=new_document_path, filename=f"{new_document_title_ext}")
+        mono_document_title_ext, dual_document_title_ext, new_document_path = await translate_(document.path, service)
+        return FileResponse(path=new_document_path, filename=f"{mono_document_title_ext}")
     except Exception as e:
         print(f"오류 발생: {e}")  # 에러 메시지 출력
