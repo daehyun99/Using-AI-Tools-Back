@@ -38,7 +38,6 @@ async def rename_video(video: Video):
     except Exception as e:
         print(f"Error during rename: {e}")
     
-    print(video_)
     return {"video_path": video_[0], "video_title": video_[1], "message": f"[영상 제목 변경 완료]"}
 
 

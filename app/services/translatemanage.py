@@ -1,14 +1,29 @@
 # from pdf2zh import translate, translate_stream # 현재 Python API을 지원하고 있지 않음.
 
-# from app.common.config import DEEPL_API_KEY, OPENAI_API_KEY
 import os
+from app.services.promptmanage import load_prompt_path
+
 import subprocess
 
 
-async def translate_(service, document):
-    cmd = ["pdf2zh", "example.pdf", "-s", f"{service}", "-li", "EN", "-lo", "KO"]
+async def translate_(document_path, service):
+    base_name = os.path.basename(document_path)
+    document_title, document_ext = os.path.splitext(base_name)
 
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True)
-    except Exception as e:
-        print(f"오류 발생: {e}")  # 에러 메시지 출력
+    output_dir = "app/tmp/docs/"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    if (service == "google") or (service == "deepl"):
+        cmd = ["pdf2zh", f"{document_path}", "-s", f"{service}", "-li", "EN", "-lo", "KO", "--output", f"{output_dir}"]
+
+    elif service == "openai":
+        prompt_path = load_prompt_path("translate__prompt.txt")
+        cmd = ["pdf2zh", f"{document_path}", "-s", f"{service}", "-li", "EN", "-lo", "KO", "--output", f"{output_dir}", "--prompt", f"{prompt_path}"]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+
+    new_document_title_ext = f"{document_title}" + "-mono" + f"{document_ext}"
+    new_document_path = os.path.join(f"{output_dir}", new_document_title_ext)
+    return new_document_title_ext, new_document_path

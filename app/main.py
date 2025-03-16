@@ -29,7 +29,7 @@ def create_app():
     if ENV == "development": 
         app.include_router(VideoManager.router, tags=["VideoManager"])
         app.include_router(FileManager.router, tags=["FileManager"])
-        # app.include_router(PipeLine.router, tags=["PipeLine"])
+        app.include_router(PipeLine.router, tags=["PipeLine"])
         app.include_router(TranslateManager.router, tags=["Translate"])
 
     # 배포용 라우터 정의
