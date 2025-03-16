@@ -24,6 +24,8 @@ async def translate_(document_path, service):
     result = subprocess.run(cmd, capture_output=True, text=True)
 
 
-    new_document_title_ext = f"{document_title}" + "-mono" + f"{document_ext}"
-    new_document_path = os.path.join(f"{output_dir}", new_document_title_ext)
-    return new_document_title_ext, new_document_path
+    mono_document_title_ext = f"{document_title}" + "-mono" + f"{document_ext}"
+    dual_document_title_ext = f"{document_title}" + "-dual" + f"{document_ext}"
+
+    new_document_path = os.path.join(f"{output_dir}", mono_document_title_ext)
+    return mono_document_title_ext, dual_document_title_ext, new_document_path

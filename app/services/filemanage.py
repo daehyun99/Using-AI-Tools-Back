@@ -20,6 +20,8 @@ async def upload_file_(file, DOCS_SAVE_PATH=DOCS_SAVE_PATH):
     async with aiofiles.open(file_path, 'wb') as out_file:
         content = await file.read()
         await out_file.write(content)
+    
+    return file_path
 
 
 async def rename_file_():

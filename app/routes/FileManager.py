@@ -32,6 +32,10 @@ async def delete_file(document: Document_):
     try:
         delete_file_(document.path)
         print(f"🚩 문서 삭제 완료 : {document.path}")
+
+        if (document.mono_path is not None) and (document.dual_path is not None):
+            delete_file_(document.mono_path)
+            delete_file_(document.dual_path)
     except Exception as e:
         print(f"Error during delete: {e}")
     return {"message": f"[문서 삭제 완료]"}
@@ -44,12 +48,12 @@ async def upload_file(file: UploadFile):
     :return:
     """
     try:
-        await upload_file_(file)
+        file_path = await upload_file_(file)
         print(f"🚩 문서 업로드 완료")
     except Exception as e:
         print(f"Error during upload: {e}") # TODO: logging 추가, Error handling 추가
 
-    return {"message": "[문서 업로드 완료]"}
+    return {"file_path": file_path, "message": "[문서 업로드 완료]"}
 
 @router.get("/rename/")
 async def rename_file(document: Document_):
