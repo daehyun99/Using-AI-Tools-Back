@@ -1,3 +1,5 @@
+# Wiki 참고 : https://github.com/daehyun99/Using-AI-Tools/wiki/error-codes
+
 class StatusCode:
     SUCCESS = 200
     CLIENT_ERROR = 400
