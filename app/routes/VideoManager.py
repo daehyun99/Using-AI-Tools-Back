@@ -4,7 +4,7 @@ from app.models import Video
 from app.services.videomanage import download_video_, delete_video_, rename_video_
 from app.common.config import VIDEO_SAVE_PATH, DOCS_SAVE_PATH
 
-from app.errors.exceptions import APIException, FailDownloadVideo
+from app.errors.exceptions import FailDownloadVideo
 
 from app.services.llm_models import whisperAI_model
 

@@ -1,65 +1,48 @@
+from app.common.status import StatusCode, Service, DetailCode
 
-class StatusCode:
-    HTTP_500 = 500
-    HTTP_400 = 400
-    HTTP_401 = 401
-    HTTP_403 = 403
-    HTTP_404 = 404
-    HTTP_405 = 405
-
-class APIException(Exception):
-    status_code: int
-    code: str
-    msg: str
-    detail: str
-
-    def __init__(
-            self,
-            *args,
-            status_code: int = StatusCode.HTTP_500,
-            code: str = "000000",
-            msg: str = None,
-            detail: str = None,
-            ex: Exception = None,
-            ):
-        self.status_code = status_code
-        self.code = code
-        self.msg = msg
-        self.detail = detail
-        super().__init__(ex)
+from app.common.response import APIException
 
 
-class FailLoadLLM(APIException):
-    def __init__(self, ex: Exception = None):
+class ErrorResponse_LLM(APIException):
+    def __init__(self, msg: str = f"🛑 ErrorResponse_LLM", ex: Exception = None):
+        error_code = f"{StatusCode.SERVER_ERROR}{Service.LLM}{DetailCode.Unknown_Error}"
+        error_detail = {
+            "code": error_code,
+            "ex" : str(ex) if ex else None
+        }
         super().__init__(
-            status_code=StatusCode.HTTP_500,
-            msg=f"LLM 모델 로드 실패",
-            code=f"{StatusCode.HTTP_500}{'1'.zfill(4)}",
-            ex=ex,
+            status=StatusCode.SERVER_ERROR,
+            msg=msg,
+            error=error_detail,
+            data=None
         )
-    def __str__(self):
-        return f"{self.code} - {self.msg}"
 
 
-class FailDownloadVideo(APIException):
-    def __init__(self, ex: Exception = None):
+class ErrorResponse_Video(APIException):
+    def __init__(self, msg: str = f"🛑 ErrorResponse_Video", ex: Exception = None):
+        error_code = f"{StatusCode.SERVER_ERROR}{Service.Video}{DetailCode.Unknown_Error}"
+        error_detail = {
+            "code": error_code,
+            "ex" : str(ex) if ex else None
+        }
         super().__init__(
-            status_code=StatusCode.HTTP_500,
-            msg=f"영상 다운로드 실패",
-            code=f"{StatusCode.HTTP_500}{'2'.zfill(4)}",
-            ex=ex,
+            status=StatusCode.SERVER_ERROR,
+            msg=msg,
+            error=error_detail,
+            data=None
         )
-    def __str__(self):
-        return f"{self.code} - {self.msg}"
-    
-class FailDeleteVideo(APIException):
-    def __init__(self, ex: Exception = None):
-        super().__init__(
-            status_code=StatusCode.HTTP_500,
-            msg=f"영상 삭제 실패",
-            code=f"{StatusCode.HTTP_500}{'3'.zfill(4)}",
-            ex=ex,
-        )
-    def __str__(self):
-        return f"{self.code} - {self.msg}"
 
+
+class ErrorResponse_File(APIException):
+    def __init__(self, msg: str = f"🛑 ErrorResponse_File", ex: Exception = None):
+        error_code = f"{StatusCode.SERVER_ERROR}{Service.Video}{DetailCode.Unknown_Error}"
+        error_detail = {
+            "code": error_code,
+            "ex" : str(ex) if ex else None
+        }
+        super().__init__(
+            status=StatusCode.SERVER_ERROR,
+            msg=msg,
+            error=error_detail,
+            data=None
+        )

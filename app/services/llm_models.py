@@ -6,8 +6,8 @@ import whisper
 import whisper.utils
 
 from app.services.promptmanage import load_prompt
+from app.common.response import SuccessResponse
 from app.errors import exceptions as ex
-from app.errors.exceptions import APIException, FailLoadLLM
 
 
 from contextlib import asynccontextmanager
@@ -20,7 +20,7 @@ whisperAI_model = None
 
 def get_whisper_model():
     if whisperAI_model is None:
-        raise RuntimeError("🚨 whisper 모델이 아직 로드되지 않았습니다.")
+        raise RuntimeError("🛑 whisper 모델이 아직 로드되지 않았습니다.")
     return whisperAI_model
 
 async def VideoTitleEditer(sentences):
@@ -39,12 +39,15 @@ async def VideoTitleEditer(sentences):
 async def lifespan(app):
     global whisperAI_model
     try:
-        # whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
+        whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
         whisperAI_model = whisper.load_model(f"{whisperAI_MODEL_NAME}")
-        print("🚩 whisper 모델 로드")
+        success_message = SuccessResponse(msg= "✅ whisper 모델 로드 성공", data={"model": whisperAI_MODEL_NAME}).to_dict()
+        print(success_message)
         yield
     except Exception as e:
-        raise ex.FailLoadLLM()
+        error_message = ex.ErrorResponse_LLM(ex=e).to_dict()
+        print(error_message)
+        yield
     finally:
         whisperAI_model = None
-        print("🚩 whisper 모델 로드 해제")
+        print("✅ whisper 모델 로드 해제")
