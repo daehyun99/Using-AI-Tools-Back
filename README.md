@@ -6,11 +6,12 @@ Translate
 Speech to Text
 
 ### Wiki
-- [Home && Milestone](https://github.com/daehyun99/Using-AI-Tools/wiki#documents)
-- [API](https://github.com/daehyun99/Using-AI-Tools/wiki/API)
-- [DIR](https://github.com/daehyun99/Using-AI-Tools/wiki/DIR)
-- [ENV](https://github.com/daehyun99/Using-AI-Tools/wiki/ENV)
-- [error-codes](https://github.com/daehyun99/Using-AI-Tools/wiki/error-codes)
+- [Home](https://github.com/daehyun99/Using-AI-Tools/wiki)
+    - [Milestone](https://github.com/daehyun99/Using-AI-Tools/wiki/Milestone)
+    - [API](https://github.com/daehyun99/Using-AI-Tools/wiki/API)
+    - [DIR](https://github.com/daehyun99/Using-AI-Tools/wiki/DIR)
+    - [ENV](https://github.com/daehyun99/Using-AI-Tools/wiki/ENV)
+    - [error-codes](https://github.com/daehyun99/Using-AI-Tools/wiki/error-codes)
 
 ### 실행
 ```sh
