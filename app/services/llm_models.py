@@ -6,8 +6,8 @@ import whisper
 import whisper.utils
 
 from app.services.promptmanage import load_prompt
-from app.common.response import SuccessResponse
-from app.errors import exceptions as ex
+from app.api.response import SuccessResponse
+from app.api import exceptions as ex
 
 
 from contextlib import asynccontextmanager
@@ -20,34 +20,41 @@ whisperAI_model = None
 
 def get_whisper_model():
     if whisperAI_model is None:
-        raise RuntimeError("🛑 whisper 모델이 아직 로드되지 않았습니다.")
+        raise ex.ErrorResponse(msg= "🛑 whisper 모델이 아직 로드되지 않았습니다.")
     return whisperAI_model
 
 async def VideoTitleEditer(sentences):
-    prompt = load_prompt("VideoTitleEditer_prompt.txt")
-    
-    response = client.responses.create(
-        model="gpt-4o",
-        instructions=f"{prompt}",
-        input=f"{sentences}",
-    )
-    result = response.output_text
-    return result
+    try:
+        prompt = load_prompt("VideoTitleEditer_prompt.txt")
+        
+        response = client.responses.create(
+            model="gpt-4o",
+            instructions=f"{prompt}",
+            input=f"{sentences}",
+        )
+        result = response.output_text
+        success_message = SuccessResponse()
+        print(success_message)
+        return result
+    except Exception as e:
+        error_message = ex.ErrorResponse(ex=e)
+        print(error_message)
 
 
 @asynccontextmanager
 async def lifespan(app):
     global whisperAI_model
     try:
-        whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
+        # whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
         whisperAI_model = whisper.load_model(f"{whisperAI_MODEL_NAME}")
-        success_message = SuccessResponse(msg= "✅ whisper 모델 로드 성공", data={"model": whisperAI_MODEL_NAME}).to_dict()
+        success_message = SuccessResponse(msg= "✅ whisper 모델 로드 성공", data={"model": whisperAI_MODEL_NAME})
         print(success_message)
         yield
     except Exception as e:
-        error_message = ex.ErrorResponse_LLM(ex=e).to_dict()
+        error_message = ex.ErrorResponse(ex=e)
         print(error_message)
         yield
     finally:
         whisperAI_model = None
-        print("✅ whisper 모델 로드 해제")
+        success_message = SuccessResponse(msg="✅ whisper 모델 로드 해제")
+        print(success_message)
