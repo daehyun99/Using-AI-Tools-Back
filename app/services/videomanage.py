@@ -4,6 +4,8 @@ import re
 import yt_dlp
 from app.common.config import VIDEO_SAVE_PATH, base_dir
 from app.services.llm_models import VideoTitleEditer
+from app.common.response import SuccessResponse
+from app.errors import exceptions as ex
 
 
 def download_video_(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
@@ -21,20 +23,26 @@ def download_video_(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
 
 
             if video_title and video_ext:
-                return f"{VIDEO_SAVE_PATH}/{video_title}.{video_ext}"
+                data = f"{VIDEO_SAVE_PATH}/{video_title}.{video_ext}"
+                success_message = SuccessResponse(data=data).to_dict()
+                print(success_message)
+                return success_message
             else:
-                raise Exception("Could not retrieve video title or extension")
+                # raise Exception("Could not retrieve video title or extension")
+                ...
     
     except Exception as e:
-        raise e
+        error_message = ex.ErrorResponse_Video(ex=e).to_dict()
+        print(error_message)
         
 def delete_video_(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
     try:
         os.remove(f'{video_path}')
-    except FileNotFoundError:
-        print(f"File not found: {video_path}")
+    # except FileNotFoundError:
+    #     print(f"File not found: {video_path}")
     except Exception as e:
-        print(f"Error deleting video: {e}")
+        error_message = ex.ErrorResponse_Video(ex=e).to_dict()
+        print(error_message)
 
 
 async def rename_video_(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
@@ -53,4 +61,6 @@ async def rename_video_(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
     new_video_title = await VideoTitleEditer(sentences = video_title)
     new_video_path = os.path.join(VIDEO_SAVE_PATH, f"{new_video_title}{video_ext}")
     os.rename(video_path, new_video_path)
-    return [new_video_path, new_video_title]
+    success_message = SuccessResponse(data=[new_video_path, new_video_title]).to_dict()
+    print(success_message)
+    return success_message

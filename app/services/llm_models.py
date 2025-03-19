@@ -39,15 +39,15 @@ async def VideoTitleEditer(sentences):
 async def lifespan(app):
     global whisperAI_model
     try:
-        # whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
+        whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
         whisperAI_model = whisper.load_model(f"{whisperAI_MODEL_NAME}")
         success_message = SuccessResponse(msg= "✅ whisper 모델 로드 성공", data={"model": whisperAI_MODEL_NAME}).to_dict()
         print(success_message)
         yield
     except Exception as e:
-        error_message = ex.ERROR_LLM(ex=e).to_dict()
-        yield
+        error_message = ex.ErrorResponse_LLM(ex=e).to_dict()
         print(error_message)
+        yield
     finally:
         whisperAI_model = None
         print("✅ whisper 모델 로드 해제")

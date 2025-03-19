@@ -45,3 +45,5 @@ class APIException(Exception):
             "error": self.error,
             "data": self.data,
         }
+    def __str__(self):
+        return json.dumps(self.to_dict(), indent= 4, ensure_ascii= False)
