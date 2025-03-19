@@ -4,15 +4,15 @@ import re
 import yt_dlp
 from app.common.config import VIDEO_SAVE_PATH, base_dir
 from app.services.llm_models import VideoTitleEditer
-from app.common.response import SuccessResponse
-from app.errors import exceptions as ex
+from app.api.response import SuccessResponse
+from app.api import exceptions as ex
 
 
 def download_video_(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
-    ydl_opts = {
-        'outtmpl': f'{VIDEO_SAVE_PATH}/%(title)s.%(ext)s',
-    }
     try:
+        ydl_opts = {
+            'outtmpl': f'{VIDEO_SAVE_PATH}/%(title)s.%(ext)s',
+        }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_ = ydl.extract_info(video_url, download=True)
             video_title = info_.get('title', None)
@@ -21,29 +21,29 @@ def download_video_(video_url, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
             import time
             time.sleep(5)
 
-
             if video_title and video_ext:
                 data = f"{VIDEO_SAVE_PATH}/{video_title}.{video_ext}"
-                success_message = SuccessResponse(data=data).to_dict()
+                success_message = SuccessResponse(data=data)
                 print(success_message)
                 return success_message
             else:
-                # raise Exception("Could not retrieve video title or extension")
                 ...
+                error_message = ex.ErrorResponse(ex=e)
+                print(error_message)
     
     except Exception as e:
-        error_message = ex.ErrorResponse_Video(ex=e).to_dict()
+        error_message = ex.ErrorResponse(ex=e)
         print(error_message)
         
+
 def delete_video_(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
     try:
         os.remove(f'{video_path}')
-    # except FileNotFoundError:
-    #     print(f"File not found: {video_path}")
+        success_message = SuccessResponse()
+        print(success_message)
     except Exception as e:
-        error_message = ex.ErrorResponse_Video(ex=e).to_dict()
+        error_message = ex.ErrorResponse(ex=e)
         print(error_message)
-
 
 async def rename_video_(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
     """
@@ -54,13 +54,17 @@ async def rename_video_(video_path, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH):
         - 이슈 이름 :유튜브 영상 제목 변경 시 오류 발생 #9
         - 링크 : https://github.com/daehyun99/Using-AI-Tools/issues/9
     """
-    base_name = os.path.basename(video_path)
-    video_title, video_ext = os.path.splitext(base_name)
-    video_title = video_title.encode('utf-8').decode('utf-8')
-    video_title = re.sub(r'[\\/*?:"<>|]', '', video_title).strip()
-    new_video_title = await VideoTitleEditer(sentences = video_title)
-    new_video_path = os.path.join(VIDEO_SAVE_PATH, f"{new_video_title}{video_ext}")
-    os.rename(video_path, new_video_path)
-    success_message = SuccessResponse(data=[new_video_path, new_video_title]).to_dict()
-    print(success_message)
-    return success_message
+    try:
+        base_name = os.path.basename(video_path)
+        video_title, video_ext = os.path.splitext(base_name)
+        video_title = video_title.encode('utf-8').decode('utf-8')
+        video_title = re.sub(r'[\\/*?:"<>|]', '', video_title).strip()
+        new_video_title = await VideoTitleEditer(sentences = video_title)
+        new_video_path = os.path.join(VIDEO_SAVE_PATH, f"{new_video_title}{video_ext}")
+        os.rename(video_path, new_video_path)
+        success_message = SuccessResponse()
+        print(success_message)
+        return [new_video_path, new_video_title]
+    except Exception as e:
+        error_message = ex.ErrorResponse(ex=e)
+        print(error_message)
