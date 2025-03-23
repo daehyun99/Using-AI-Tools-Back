@@ -1,30 +1,61 @@
-import sys, os
-from os import path, environ
+from dataclasses import dataclass
+
+from os import path, environ, getenv
 from dotenv import load_dotenv
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 
+# ================================================================================ #
+# .ENV
 
 load_dotenv()
 
-ENV = os.getenv("ENV", "development") # "production" or "development"
+# "production" or "development"
+ENV = getenv("ENV", "development") 
 
-DEEPL_AUTH_KEY = os.getenv("DEEPL_AUTH_KEY")
+# API keys
+DEEPL_AUTH_KEY = getenv("DEEPL_AUTH_KEY")
+OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# Models
+OPENAI_MODEL = getenv("OPENAI_MODEL", "gpt-4o")
+whisperAI_MODEL_NAME = getenv("WHISPER_MODEL_NAME", "tiny")
 
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+# Databases
+DB_USER = getenv("DB_USER")
+DB_PW = getenv("DB_PW")
+DB_HOST = getenv("DB_HOST")
+DB_PORT = getenv("DB_PORT")
+DB_NAME = getenv("DB_NAME")
 
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+# ================================================================================ #
+# Databases
 
-VIDEO_SAVE_PATH = os.getenv("VIDEO_SAVE_PATH", "app/tmp/videos/")
+@dataclass
+class Config:
+    BASE_DIR = base_dir
+    
+    DB_POOL_RECYCLE: int = 900
+    DB_ECHO: bool = True
 
-DOCS_SAVE_PATH = os.getenv("DOCS_SAVE_PATH", "app/tmp/docs/")
 
-PROMPT_PATH = os.getenv("PROMPT_PATH", "app/prompt/")
+@dataclass
+class DevConfig(Config):
+    DB_URL: str = f"mysql+pymysql://{DB_USER}:{DB_PW}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
+    TRUSTED_HOSTS = ["*"]
+    ALLOW_SITE = ["*"]
 
-whisperAI_MODEL_NAME = os.getenv("WHISPER_MODEL_NAME", "tiny")
 
-PYTHON_DONT_WRITE_BYTECODE = os.getenv("PYTHON_DONT_WRITE_BYTECODE", "False").lower() == "true"
+@dataclass
+class ProbConfig(Config):
+    TRUSTED_HOSTS = ["*"]
+    ALLOW_SITE = ["*"]
 
-sys.dont_write_bytecode = PYTHON_DONT_WRITE_BYTECODE
+
+def conf():
+    """
+    환경 불러오기
+    :return:
+    """
+    config = dict(production=ProbConfig(), development=DevConfig())
+    return config.get(ENV, DevConfig())

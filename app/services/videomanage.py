@@ -2,7 +2,8 @@ import os
 import re
 
 import yt_dlp
-from app.common.config import VIDEO_SAVE_PATH, base_dir
+from app.common.config import base_dir
+from app.common.const import VIDEO_SAVE_PATH
 from app.services.llm_models import VideoTitleEditer
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex

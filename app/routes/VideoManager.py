@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app.models import Video
 from app.services.videomanage import download_video_, delete_video_, rename_video_
-from app.common.config import VIDEO_SAVE_PATH, DOCS_SAVE_PATH
+from app.common.const import VIDEO_SAVE_PATH, DOCS_SAVE_PATH
 
 from app.api import exceptions as ex
 

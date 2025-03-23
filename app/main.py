@@ -1,15 +1,17 @@
-from app.common import config
-from app.common.config import ENV
-
-from typing import Union
-
 import uvicorn
 from fastapi import FastAPI
-from app.routes import PipeLine, TranslateManager
+from typing import Union
+
+from dataclasses import asdict
+
+from app.routes import PipeLine
 from app.services.llm_models import lifespan
+from app.common.config import conf, ENV
+from app.database.conn import db
+
 
 # 개발용
-from app.routes import VideoManager, FileManager
+from app.routes import VideoManager, FileManager, TranslateManager
 
 
 def create_app():
@@ -17,8 +19,18 @@ def create_app():
     앱 함수 실행
     :return:
     """
+    c = conf()
+
     app = FastAPI(lifespan=lifespan)
+    conf_dict = asdict(c)
+    db.init_app(app, **conf_dict)
+
+    # 테스트 코드
+    if ENV == "development":
+        from app.test.db_test import test1
     
+
+
     # 미들웨어 정의
 
 
@@ -34,7 +46,7 @@ def create_app():
 
     # 배포용 라우터 정의
     elif ENV == "production": 
-        # app.include_router(PipeLine.router, tags=["PipeLine"])
+        app.include_router(PipeLine.router, tags=["PipeLine"])
         ...
     
 
