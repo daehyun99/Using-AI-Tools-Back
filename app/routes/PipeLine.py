@@ -1,4 +1,4 @@
-from app.common.config import DOCS_SAVE_PATH
+from app.common.const import DOCS_SAVE_PATH
 from fastapi import APIRouter
 from docx import Document
 from app.services.llm_models import get_whisper_model

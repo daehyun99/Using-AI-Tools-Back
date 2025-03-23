@@ -3,7 +3,7 @@ import os
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 
-from app.common.config import PROMPT_PATH
+from app.common.const import PROMPT_PATH
 
 def load_prompt(file_name):
     try:

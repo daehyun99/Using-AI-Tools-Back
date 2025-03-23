@@ -1,7 +1,8 @@
 import os
 import aiofiles
 
-from app.common.config import DOCS_SAVE_PATH, base_dir
+from app.common.config import base_dir
+from app.common.const import DOCS_SAVE_PATH
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 
