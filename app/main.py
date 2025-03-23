@@ -25,7 +25,9 @@ def create_app():
     conf_dict = asdict(c)
     db.init_app(app, **conf_dict)
 
-    from app.test.db_test import test1
+    # 테스트 코드
+    if ENV == "development":
+        from app.test.db_test import test1
     
 
 
