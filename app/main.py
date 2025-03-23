@@ -24,6 +24,8 @@ def create_app():
     app = FastAPI(lifespan=lifespan)
     conf_dict = asdict(c)
     db.init_app(app, **conf_dict)
+
+    from app.test.db_test import test1
     
 
 

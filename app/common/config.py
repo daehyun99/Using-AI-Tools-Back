@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-import sys, os
+
 from os import path, environ, getenv
 from dotenv import load_dotenv
 
@@ -59,11 +59,3 @@ def conf():
     """
     config = dict(production=ProbConfig(), development=DevConfig())
     return config.get(ENV, DevConfig())
-
-# 테스트용 코드
-from dataclasses import asdict
-def test(DB_URL=None, DB_ECHO=None, DB_POOL_RECYCLE=None, **kwargs):
-    print(DB_URL, DB_ECHO, DB_POOL_RECYCLE)
-
-arg = asdict(DevConfig())
-test(**arg)
