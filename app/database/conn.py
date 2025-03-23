@@ -3,6 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+from app.common import exceptions as ex
+
 import logging
 
 
@@ -49,7 +51,8 @@ class SQLAlchemy:
         :return:
         """
         if self._session is None:
-            raise Exception("must be called 'init_app'")
+            error_message = ex.ErrorResponse(ex=e)
+            print(error_message)
         db_session = None
         try:
             db_session = self._session()
