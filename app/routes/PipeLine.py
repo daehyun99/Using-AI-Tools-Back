@@ -2,6 +2,7 @@ from app.common.const import DOCS_SAVE_PATH
 from fastapi import APIRouter
 from docx import Document
 from app.services.llm_models import get_whisper_model
+from app.services.utils import generate_metadata
 
 from app.routes.VideoManager import download_video, rename_video, delete_video
 from app.routes.FileManager import delete_file, upload_file
