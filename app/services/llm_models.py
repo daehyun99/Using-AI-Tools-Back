@@ -1,16 +1,14 @@
+import app.common.config as config
 from app.common.config import whisperAI_MODEL_NAME, OPENAI_API_KEY
 
-import sys
 from openai import OpenAI
 import whisper
-import whisper.utils
 
 from app.services.promptmanage import load_prompt
+
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 
-
-from contextlib import asynccontextmanager
 
 client = OpenAI(
     api_key=OPENAI_API_KEY
@@ -40,21 +38,20 @@ async def VideoTitleEditer(sentences):
         error_message = ex.ErrorResponse(ex=e)
         print(error_message)
 
-
-@asynccontextmanager
-async def lifespan(app):
-    global whisperAI_model
+def WhisperLoader(whisperAI_model):
     try:
-        # whisperAI_MODEL_NAME = "except_test" # LLM 모델 로드 실패 테스트 코드
-        whisperAI_model = whisper.load_model(f"{whisperAI_MODEL_NAME}")
-        success_message = SuccessResponse(msg= "✅ whisper 모델 로드 성공", data={"model": whisperAI_MODEL_NAME})
+        whisperAI_model = whisper.load_model(f"{config.whisperAI_MODEL_NAME}")
+        success_message = SuccessResponse(msg= "✅ whisper 모델 로드 성공", data={"model": config.whisperAI_MODEL_NAME})
         print(success_message)
-        yield
+        return whisperAI_model
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)
         print(error_message)
-        yield
-    finally:
-        whisperAI_model = None
-        success_message = SuccessResponse(msg="✅ whisper 모델 로드 해제")
-        print(success_message)
+        return None
+
+
+async def WhisperUnLoader(whisperAI_model):
+    whisperAI_model = None
+    success_message = SuccessResponse(msg="✅ whisper 모델 로드 해제")
+    print(success_message)
+    return None

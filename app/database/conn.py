@@ -3,9 +3,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from app.common import exceptions as ex
+from app.api import exceptions as ex
 
-import logging
+from app.common.logger import logger
 
 
 class SQLAlchemy:
@@ -33,27 +33,21 @@ class SQLAlchemy:
         )
 
         self._session = sessionmaker(autocommit=False, autoflush=False, bind=self._engine)
-
-        @app.on_event("startup")
-        def startup():
-            self._engine.connect()
-            logging.info("✅ DB connected.")
-
-        @app.on_event("shutdown")
-        def shutdown():
-            self._session.close_all()
-            self._engine.dispose()
-            logging.info("❎ DB disconnected.")
-
+        db._engine.connect()
+        logger.info("✅ DB connected")
+        
     def get_db(self):
         """
         요청마다 DB 세션 유지 함수
         :return:
         """
-        if self._session is None:
-            error_message = ex.ErrorResponse(ex=e)
-            print(error_message)
-        db_session = None
+        try:
+            if self._session is None:
+                error_message = ex.ErrorResponse()
+                print(error_message)
+            db_session = None
+        except:
+            ...
         try:
             db_session = self._session()
             yield db_session
@@ -62,6 +56,16 @@ class SQLAlchemy:
             print(error_message)
         finally:
             db_session.close()
+    
+    def close(self) -> None:
+        """
+        DB 연결 해제 함수
+        :return:
+        """
+        db._session.close_all()
+        db._engine.dispose()
+        logger.info("✅ DB disconnected")
+        
 
     @property
     def session(self):
