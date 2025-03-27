@@ -2,12 +2,13 @@ import uvicorn
 from fastapi import FastAPI
 from typing import Union
 
-from dataclasses import asdict
+
 
 from app.routes import PipeLine
-from app.services.llm_models import lifespan
+from app.common.lifespan import lifespan
 from app.common.config import conf, ENV
-from app.database.conn import db
+from app.common.logger import logger
+
 
 
 # 개발용
@@ -19,15 +20,16 @@ def create_app():
     앱 함수 실행
     :return:
     """
-    c = conf()
-
     app = FastAPI(lifespan=lifespan)
-    conf_dict = asdict(c)
-    db.init_app(app, **conf_dict)
 
     # 테스트 코드
     if ENV == "development":
-        from app.test.db_test import test1
+        from app.test import db_test, llm_test
+        from app.common.config import DevConfig
+        from dataclasses import asdict
+        arg = asdict(DevConfig())
+        db_test.test1(**arg)
+        llm_test.test2(enabled=False) # True -> 예외 발생, False -> 정상 작동
     
 
 
@@ -49,7 +51,7 @@ def create_app():
         app.include_router(PipeLine.router, tags=["PipeLine"])
         ...
     
-
+    logger.info("✅ App created.")
     return app
 
 
