@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from typing import Union
 
-
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes import PipeLine
 from app.common.lifespan import lifespan
@@ -34,7 +34,13 @@ def create_app():
 
 
     # 미들웨어 정의
-
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:5173"],  # Vite 개발 서버 주소
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 
