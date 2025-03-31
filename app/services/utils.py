@@ -10,8 +10,9 @@ from sqlalchemy.orm import Session
 import json
 
 
-def logging_request(session: Session, correlation_id: str, msg: str, metadata: dict):
+def logging_request(session: Session, layer: str, correlation_id: str, msg: str, metadata: dict):
     log = temps(
+        layer = layer,
         log_type="REQUEST",
         correlation_id=correlation_id,
         msg=msg,
@@ -20,12 +21,12 @@ def logging_request(session: Session, correlation_id: str, msg: str, metadata: d
     session.add(log)
     session.commit()
 
-def logging_response(session: Session, correlation_id: str, obj: SuccessResponse):
+def logging_response(session: Session, layer: str, correlation_id: str, obj: SuccessResponse):
     """ DB에 로깅 + Response 반환"""
     log = temps(
-        layer = "PRESENTATION",
+        layer = layer,
         log_type="RESPONSE",
-        correlation_id="correlation_id",
+        correlation_id=correlation_id,
         status=obj.status,
         msg=obj.msg,
         data=obj.data,
