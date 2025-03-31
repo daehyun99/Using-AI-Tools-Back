@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.models import Video
 from app.services.videomanage import download_video_, delete_video_, rename_video_
@@ -6,9 +6,11 @@ from app.common.const import VIDEO_SAVE_PATH, DOCS_SAVE_PATH
 
 from app.api import exceptions as ex
 
+from app.database.conn import db
 from app.services.llm_models import whisperAI_model
 
 router = APIRouter(prefix="/video")
+
 
 
 @router.post("/download/")
@@ -19,7 +21,9 @@ async def download_video(video: Video):
     :return video_path:
     """
     try:
-        video_path = download_video_(video.url)
+        session = next(db.session())
+        # logging_request
+        video_path = download_video_(video.url, session=session)
         
     except Exception as e:
         raise ex.ErrorResponse_Video(ex=e)

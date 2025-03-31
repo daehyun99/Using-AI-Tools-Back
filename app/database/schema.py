@@ -21,6 +21,7 @@ class BaseMixin:
 
 class temps(Base, BaseMixin):
     __tablename__ = "temps" # logs
+    layer = Column(Enum("PRESENTATION", "BUSINESS", "PERSISTENCE", "DATABASE"), nullable=False)
     log_type = Column(Enum("REQUEST", "RESPONSE"), nullable=False)
     correlation_id = Column(String, nullable=False, index=True)
     status = Column(String, nullable=True)
