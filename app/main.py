@@ -9,7 +9,7 @@ from app.common.lifespan import lifespan
 from app.common.config import conf, ENV
 from app.common.logger import logger
 
-
+from app.middlewares.log_response import log_response_middleware, test_middleware
 
 # 개발용
 from app.routes import VideoManager, FileManager, TranslateManager
@@ -34,8 +34,9 @@ def create_app():
 
 
     # 미들웨어 정의
-
-
+    # app.middleware("http")(log_response_middleware)
+    app.middleware("http")(test_middleware)
+    
 
 
 
