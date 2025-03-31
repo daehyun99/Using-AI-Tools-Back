@@ -10,7 +10,6 @@ from app.common.config import conf, ENV
 from app.common.logger import logger
 
 
-
 # 개발용
 from app.routes import VideoManager, FileManager, TranslateManager
 
@@ -34,8 +33,7 @@ def create_app():
 
 
     # 미들웨어 정의
-
-
+    
 
 
 
