@@ -10,7 +10,6 @@ from app.common.config import conf, ENV
 from app.common.logger import logger
 
 
-
 # 개발용
 from app.routes import VideoManager, FileManager, TranslateManager
 
@@ -34,13 +33,7 @@ def create_app():
 
 
     # 미들웨어 정의
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["http://localhost:5173"],  # Vite 개발 서버 주소
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+
 
 
 
