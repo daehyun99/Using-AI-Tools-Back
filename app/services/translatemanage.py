@@ -8,8 +8,11 @@ from app.api import exceptions as ex
 
 import subprocess
 
+from app.common.utils import logging_response
 
-async def translate_(document_path, service):
+layer = "BUSINESS"
+
+async def translate_(document_path, service, session, correlation_id):
     try:
         base_name = os.path.basename(document_path)
         document_title, document_ext = os.path.splitext(base_name)
@@ -36,5 +39,5 @@ async def translate_(document_path, service):
         return mono_document_title_ext, dual_document_title_ext, new_document_path
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)
-        print(error_message)
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
     

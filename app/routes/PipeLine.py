@@ -2,7 +2,7 @@ from app.common.const import DOCS_SAVE_PATH
 from fastapi import APIRouter
 from docx import Document
 from app.services.llm_models import get_whisper_model
-from app.services.utils import generate_metadata
+from app.common.utils import generate_metadata
 
 from app.routes.VideoManager import download_video, rename_video, delete_video
 from app.routes.FileManager import delete_file, upload_file
@@ -14,6 +14,8 @@ from app.models import Video, Document_, TranslateService
 from fastapi.responses import FileResponse
 from fastapi import UploadFile, BackgroundTasks
 
+from app.database.conn import db
+
 router = APIRouter()
 
 @router.post("/Speech-to-Text/", response_class=FileResponse)
@@ -23,6 +25,11 @@ async def Speech2Text(video: Video, backgroundtasks: BackgroundTasks):
     :param VideoDownload:
     :return docs:
     """
+    session = next(db.session())
+    correlation_id = generate_metadata()
+    # logging_request
+    
+
     download_result = await download_video(video)
     video.path = download_result["video_path"]
 
@@ -30,7 +37,7 @@ async def Speech2Text(video: Video, backgroundtasks: BackgroundTasks):
     video.path = rename_result["video_path"]
     video.title = rename_result["video_title"]
 
-    whisperAI_model = get_whisper_model()
+    whisperAI_model = get_whisper_model(session=session, correlation_id=correlation_id)
     result = whisperAI_model.transcribe(video.path, task="transcribe")
 
     document = Document_(path=f"{DOCS_SAVE_PATH}/{video.title}.docx")
@@ -55,7 +62,11 @@ async def Translate(file: UploadFile, service: TranslateService, backgroundtasks
     :return docs:
     """
     try:
-        result = await upload_file(file)
+        session = next(db.session())
+        correlation_id = generate_metadata()
+        # logging_request
+        
+        result = await upload_file(file, session=session, correlation_id=correlation_id)
 
         document = Document_(path=result["file_path"])
 

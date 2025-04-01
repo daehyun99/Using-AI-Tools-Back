@@ -8,7 +8,7 @@ from app.services.llm_models import VideoTitleEditer
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 
-from app.services.utils import logging_response
+from app.common.utils import logging_response
 
 layer = "BUSINESS"
 
