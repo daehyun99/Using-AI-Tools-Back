@@ -17,7 +17,7 @@
 
 ## Diagram
 ```mermaid
-graph LR
+graph TD
     User[User] <-->|Using-AI-Tools-Front| AI_Agent[AI Agent]
     AI_Agent[AI Agent] -->|calls| ENTRY[System Entry]
 
