@@ -30,7 +30,7 @@ def get_whisper_model(session, correlation_id):
 
 async def VideoTitleEditer(sentences, session, correlation_id):
     try:
-        prompt = load_prompt("VideoTitleEditer_prompt.txt")
+        prompt = load_prompt("VideoTitleEditer_prompt.txt", session, correlation_id)
         
         response = client.responses.create(
             model="gpt-4o",
@@ -39,7 +39,7 @@ async def VideoTitleEditer(sentences, session, correlation_id):
         )
         result = response.output_text
         success_message = SuccessResponse()
-        print(success_message)
+        print("test", success_message)
         return result
     except Exception as e:
         error_message = ex.ErrorResponse_LLM(ex=e)

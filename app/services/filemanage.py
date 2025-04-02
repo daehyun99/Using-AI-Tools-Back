@@ -26,7 +26,7 @@ async def upload_file_(file, session, correlation_id, DOCS_SAVE_PATH=DOCS_SAVE_P
         async with aiofiles.open(file_path, 'wb') as out_file:
             content = await file.read()
             await out_file.write(content)
-        success_message = SuccessResponse(data={"file_path": file_path})
+        success_message = SuccessResponse(data={"path": file_path})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)

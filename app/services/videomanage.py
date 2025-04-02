@@ -62,7 +62,7 @@ async def rename_video_(video_path, session, correlation_id, VIDEO_SAVE_PATH=VID
         video_title, video_ext = os.path.splitext(base_name)
         video_title = video_title.encode('utf-8').decode('utf-8')
         video_title = re.sub(r'[\\/*?:"<>|]', '', video_title).strip()
-        new_video_title = await VideoTitleEditer(sentences = video_title)
+        new_video_title = await VideoTitleEditer(sentences = video_title, session=session, correlation_id=correlation_id)
         new_video_path = os.path.join(VIDEO_SAVE_PATH, f"{new_video_title}{video_ext}")
         os.rename(video_path, new_video_path)
         success_message = SuccessResponse(data={"video_path": new_video_path, "video_title": new_video_title})

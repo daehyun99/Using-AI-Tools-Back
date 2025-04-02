@@ -70,7 +70,7 @@ async def upload_file(file: UploadFile):
         correlation_id = generate_metadata()
         # logging_request
         file_path = await upload_file_(file, session=session, correlation_id=correlation_id)
-        success_message = SuccessResponse(data={"file_path": file_path.data})
+        success_message = SuccessResponse(data={"path": file_path.data})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
         error_message = ex.ErrorResponse_File(ex=e)
@@ -80,7 +80,7 @@ async def upload_file(file: UploadFile):
 @router.get("/rename/")
 async def rename_file(document: Document_):
     """
-    `File API`
+    `File API` `DEV`
     :param Document_:
     :return:
     """
