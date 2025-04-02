@@ -10,8 +10,8 @@ from app.api import exceptions as ex
 from app.database.conn import db
 from app.services.llm_models import whisperAI_model
 
-from app.services.utils import logging_response
-from app.services.utils import generate_metadata
+from app.common.utils import logging_response
+from app.common.utils import generate_metadata
 
 router = APIRouter(prefix="/video")
 
@@ -32,7 +32,8 @@ async def download_video(video: Video):
         success_message = SuccessResponse(data={"video_path": video_path.data})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
-        raise ex.ErrorResponse_Video(ex=e)
+        error_message = ex.ErrorResponse_Video(ex=e)
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
 
 
 @router.put("/rename/")
@@ -52,7 +53,7 @@ async def rename_video(video: Video):
         success_message = SuccessResponse(data={"video_path": video_["video_path"], "video_title": video_["video_title"]})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
-        error_message = ex.ErrorResponse(ex=e)
+        error_message = ex.ErrorResponse_Video(ex=e)
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
 
 
@@ -71,5 +72,5 @@ async def delete_video(video: Video):
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
-        error_message = ex.ErrorResponse(ex=e)
+        error_message = ex.ErrorResponse_Video(ex=e)
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)

@@ -6,9 +6,15 @@ import whisper
 
 from app.services.promptmanage import load_prompt
 
+from app.database.conn import db
+
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 
+from app.common.utils import generate_metadata
+from app.common.utils import logging_response
+
+layer = "BUSINESS"
 
 client = OpenAI(
     api_key=OPENAI_API_KEY
@@ -16,14 +22,15 @@ client = OpenAI(
 
 whisperAI_model = None
 
-def get_whisper_model():
+def get_whisper_model(session, correlation_id):
     if whisperAI_model is None:
-        raise ex.ErrorResponse(msg= "🛑 whisper 모델이 아직 로드되지 않았습니다.")
+        error_message = ex.ErrorResponse_LLM()
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
     return whisperAI_model
 
-async def VideoTitleEditer(sentences):
+async def VideoTitleEditer(sentences, session, correlation_id):
     try:
-        prompt = load_prompt("VideoTitleEditer_prompt.txt")
+        prompt = load_prompt("VideoTitleEditer_prompt.txt", session, correlation_id)
         
         response = client.responses.create(
             model="gpt-4o",
@@ -32,25 +39,30 @@ async def VideoTitleEditer(sentences):
         )
         result = response.output_text
         success_message = SuccessResponse()
-        print(success_message)
+        print("test", success_message)
         return result
     except Exception as e:
-        error_message = ex.ErrorResponse(ex=e)
-        print(error_message)
+        error_message = ex.ErrorResponse_LLM(ex=e)
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
 
 def WhisperLoader(whisperAI_model):
     try:
+        session = next(db.session())
+        correlation_id = generate_metadata()
+        # logging_request
         whisperAI_model = whisper.load_model(f"{config.whisperAI_MODEL_NAME}")
         success_message = SuccessResponse(msg= "✅ whisper 모델 로드 성공", data={"model": config.whisperAI_MODEL_NAME})
         print(success_message)
         return whisperAI_model
     except Exception as e:
-        error_message = ex.ErrorResponse(ex=e)
-        print(error_message)
-        return None
+        error_message = ex.ErrorResponse_LLM(ex=e)
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
 
 
 async def WhisperUnLoader(whisperAI_model):
+    session = next(db.session())
+    correlation_id = generate_metadata()
+    # logging_request
     whisperAI_model = None
     success_message = SuccessResponse(msg="✅ whisper 모델 로드 해제")
     print(success_message)
