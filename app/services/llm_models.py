@@ -30,7 +30,7 @@ def get_whisper_model(session, correlation_id):
 
 async def VideoTitleEditer(sentences, session, correlation_id):
     try:
-        prompt = load_prompt("VideoTitleEditer_prompt.txt", session, correlation_id)
+        prompt = load_prompt("VideoTitleEditer_prompt002.txt", session, correlation_id)
         
         response = client.responses.create(
             model="gpt-4o",
