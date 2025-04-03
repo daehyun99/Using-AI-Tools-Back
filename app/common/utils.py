@@ -1,14 +1,18 @@
-import uuid
-
-def generate_metadata():
-    return str(uuid.uuid4())
-
 from app.database.schema import temps
 from app.api.response import SuccessResponse
-
 from sqlalchemy.orm import Session
 import json
 
+from uuid import uuid4
+
+def generate_metadata():
+    metadata = None
+    while not metadata:
+        metadata_candidate = f"{str(uuid4())[:-12]}{str(uuid4())}"
+        metadata_check = True # DB에서 metadata 중복여부를 확인하는 코드로 수정 필요 (True -> DB에 중복 없음, False -> DB에 중복 있음)
+        if metadata_check:
+            metadata = metadata_candidate
+    return metadata
 
 def logging_request(session: Session, layer: str, correlation_id: str, msg: str, metadata: dict):
     log = temps(

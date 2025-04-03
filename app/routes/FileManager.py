@@ -20,15 +20,13 @@ router = APIRouter(prefix="/file")
 layer = "PRESENTATION"
 
 @router.post("/download/", response_class=FileResponse)
-async def download_file(document: Document_):
+async def download_file(document: Document_, session, correlation_id):
     """
     `File API`
     :param docs_path:
     :return docs:
     """
     try:
-        session = next(db.session())
-        correlation_id = generate_metadata()
         # logging_request
         document_name = os.path.basename(document.path)
         return FileResponse(path=document.path, filename=f"{document_name}")
@@ -37,20 +35,18 @@ async def download_file(document: Document_):
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
 
 @router.delete("/delete/")
-async def delete_file(document: Document_):
+async def delete_file(document: Document_, session, correlation_id):
     """
     `File API`
     :param Document_:
     :return:
     """
     try:
-        session = next(db.session())
-        correlation_id = generate_metadata()
         # logging_request
         delete_file_(document.path, session=session, correlation_id=correlation_id)
         if (document.mono_path is not None) and (document.dual_path is not None):
-            delete_file_(document.mono_path)
-            delete_file_(document.dual_path)
+            delete_file_(document.mono_path, session=session, correlation_id=correlation_id)
+            delete_file_(document.dual_path, session=session, correlation_id=correlation_id)
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
@@ -59,18 +55,16 @@ async def delete_file(document: Document_):
     
 
 @router.post("/upload/")
-async def upload_file(file: UploadFile):
+async def upload_file(file: UploadFile, session, correlation_id):
     """
     `File API`
     :param UploadFile:
     :return:
     """
     try:
-        session = next(db.session())
-        correlation_id = generate_metadata()
         # logging_request
         file_path = await upload_file_(file, session=session, correlation_id=correlation_id)
-        success_message = SuccessResponse(data={"path": file_path.data})
+        success_message = SuccessResponse(data={"path": file_path.data["path"]})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
         error_message = ex.ErrorResponse_File(ex=e)
@@ -78,15 +72,13 @@ async def upload_file(file: UploadFile):
 
 
 @router.get("/rename/")
-async def rename_file(document: Document_):
+async def rename_file(document: Document_, session, correlation_id):
     """
     `File API` `DEV`
     :param Document_:
     :return:
     """
     try:
-        session = next(db.session())
-        correlation_id = generate_metadata()
         # logging_request
         rename_file_(session=session, correlation_id=correlation_id)
         success_message = SuccessResponse()

@@ -35,7 +35,6 @@ async def translate_(document_path, service, session, correlation_id):
 
         new_document_path = os.path.join(f"{output_dir}", mono_document_title_ext)
         success_message = SuccessResponse()
-        print(success_message)
         return mono_document_title_ext, dual_document_title_ext, new_document_path
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)

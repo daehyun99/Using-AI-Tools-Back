@@ -10,16 +10,13 @@ from app.services.llm_models import WhisperLoader, WhisperUnLoader
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 
-whisperAI_model = None
-
 @asynccontextmanager
 async def lifespan(app):
-    global whisperAI_model
     try:
         conf_dict = asdict(conf())
         db.init_app(app, **conf_dict)
         
-        whisperAI_model = WhisperLoader(whisperAI_model= whisperAI_model)
+        app.state.whisperAI_model = WhisperLoader(whisperAI_model= None)
         logger.info("✅ Lifespan startup complete")
         yield
     except Exception as e:
@@ -27,6 +24,7 @@ async def lifespan(app):
         print(error_message)
         yield
     finally:
-        whisperAI_model = WhisperUnLoader(whisperAI_model= whisperAI_model)
+        if hasattr(app.state, "whisperAI_model"):
+            app.state.whisperAI_model = WhisperUnLoader(whisperAI_model= app.state.whisperAI_model)
         db.close()
         logger.info("✅ Lifespan shutdown complete")

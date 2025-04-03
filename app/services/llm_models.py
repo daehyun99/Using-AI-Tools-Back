@@ -20,9 +20,8 @@ client = OpenAI(
     api_key=OPENAI_API_KEY
 )
 
-whisperAI_model = None
 
-def get_whisper_model(session, correlation_id):
+def get_whisper_model(whisperAI_model, session, correlation_id):
     if whisperAI_model is None:
         error_message = ex.ErrorResponse_LLM()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
@@ -30,7 +29,7 @@ def get_whisper_model(session, correlation_id):
 
 async def VideoTitleEditer(sentences, session, correlation_id):
     try:
-        prompt = load_prompt("VideoTitleEditer_prompt.txt", session, correlation_id)
+        prompt = load_prompt("VideoTitleEditer_prompt002.txt", session, correlation_id)
         
         response = client.responses.create(
             model="gpt-4o",
