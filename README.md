@@ -41,6 +41,7 @@ graph TD
     - [API](https://github.com/daehyun99/Using-AI-Tools/wiki/API)
     - [DIR](https://github.com/daehyun99/Using-AI-Tools/wiki/DIR)
     - [ENV](https://github.com/daehyun99/Using-AI-Tools/wiki/ENV)
+    - [PROMPT](https://github.com/daehyun99/Using-AI-Tools/wiki/PROMPT)
     - [SCHEMA](https://github.com/daehyun99/Using-AI-Tools/wiki/SCHEMA)
     - [error-codes](https://github.com/daehyun99/Using-AI-Tools/wiki/error-codes)
 
