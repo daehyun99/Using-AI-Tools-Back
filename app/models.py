@@ -32,6 +32,6 @@ class Document_(BaseModel):
 
 class TranslateService(str, Enum):
     """Translate 서비스 모델"""
-    google = "google"
+    # google = "google"
     deepl = "deepl"
     openai = "openai"
