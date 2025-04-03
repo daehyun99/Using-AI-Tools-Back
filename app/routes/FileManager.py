@@ -20,7 +20,7 @@ router = APIRouter(prefix="/file")
 layer = "PRESENTATION"
 
 @router.post("/download/", response_class=FileResponse)
-async def download_file(document: Document_):
+async def download_file(document: Document_, session, correlation_id):
     """
     `File API`
     :param docs_path:
@@ -37,7 +37,7 @@ async def download_file(document: Document_):
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
 
 @router.delete("/delete/")
-async def delete_file(document: Document_):
+async def delete_file(document: Document_, session, correlation_id):
     """
     `File API`
     :param Document_:
@@ -59,7 +59,7 @@ async def delete_file(document: Document_):
     
 
 @router.post("/upload/")
-async def upload_file(file: UploadFile):
+async def upload_file(file: UploadFile, session, correlation_id):
     """
     `File API`
     :param UploadFile:
@@ -78,7 +78,7 @@ async def upload_file(file: UploadFile):
 
 
 @router.get("/rename/")
-async def rename_file(document: Document_):
+async def rename_file(document: Document_, session, correlation_id):
     """
     `File API` `DEV`
     :param Document_:

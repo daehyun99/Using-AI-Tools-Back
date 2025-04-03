@@ -20,9 +20,8 @@ client = OpenAI(
     api_key=OPENAI_API_KEY
 )
 
-whisperAI_model = None
 
-def get_whisper_model(session, correlation_id):
+def get_whisper_model(whisperAI_model, session, correlation_id):
     if whisperAI_model is None:
         error_message = ex.ErrorResponse_LLM()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
