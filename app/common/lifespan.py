@@ -24,6 +24,7 @@ async def lifespan(app):
         print(error_message)
         yield
     finally:
-        whisperAI_model = WhisperUnLoader(whisperAI_model= app.state.whisperAI_model)
+        if hasattr(app.state, "whisperAI_model"):
+            app.state.whisperAI_model = WhisperUnLoader(whisperAI_model= app.state.whisperAI_model)
         db.close()
         logger.info("✅ Lifespan shutdown complete")

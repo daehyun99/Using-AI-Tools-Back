@@ -48,6 +48,7 @@ class DevConfig(Config):
 
 @dataclass
 class ProbConfig(Config):
+    DB_URL: str = f"mysql+pymysql://{DB_USER}:{DB_PW}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
 

@@ -54,7 +54,7 @@ def create_app():
     # 배포용 라우터 정의
     elif ENV == "production": 
         app.include_router(PipeLine.router, tags=["PipeLine"])
-        ...
+    
     
     logger.info("✅ App created.")
     return app

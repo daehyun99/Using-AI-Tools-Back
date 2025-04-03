@@ -39,7 +39,7 @@ async def Speech2Text(request: Request, video: Video, backgroundtasks: Backgroun
     video.title = rename_result.data["video_title"]
     
     model = request.app.state.whisperAI_model
-    print("whisperAI_model : ", model)
+    
     # whisperAI_model = get_whisper_model(whisperAI_model= whisperAI_model, session=session, correlation_id=correlation_id)
     result = model.transcribe(video.path, task="transcribe")
 
@@ -70,16 +70,15 @@ async def Translate(file: UploadFile, service: TranslateService, backgroundtasks
         # logging_request
         
         result = await upload_file(file, session=session, correlation_id=correlation_id)
+        document = Document_(path=result.data["path"])
 
-        document = Document_(path=result["file_path"])
-
-        mono_document_title_ext, dual_document_title_ext, new_document_path = await translate_(document.path, service)
+        mono_document_title_ext, dual_document_title_ext, new_document_path = await translate_(document.path, service, session=session, correlation_id=correlation_id)
 
         document.mono_path = os.path.join(f"{DOCS_SAVE_PATH}", mono_document_title_ext)
         document.dual_path = os.path.join(f"{DOCS_SAVE_PATH}", dual_document_title_ext)
         
 
-        backgroundtasks.add_task(delete_file, document)
+        backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)
 
         return FileResponse(path=new_document_path, filename=f"{mono_document_title_ext}")
     except Exception as e:
