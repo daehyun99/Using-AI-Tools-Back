@@ -16,7 +16,7 @@ def download_video_(video_url, session, correlation_id, VIDEO_SAVE_PATH=VIDEO_SA
     try:
         # logging_request
         ydl_opts = {
-            'outtmpl': f'{VIDEO_SAVE_PATH}/temp.%(ext)s',
+            'outtmpl': f'{VIDEO_SAVE_PATH}/temp_{correlation_id}.%(ext)s',
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_ = ydl.extract_info(video_url, download=True)
@@ -56,7 +56,7 @@ async def rename_video_(video_path, session, correlation_id, VIDEO_SAVE_PATH=VID
         video_title = re.sub(r'[\\/*?:"<>|]', '', video_title).strip()
         new_video_title = await VideoTitleEditer(sentences = video_title, session=session, correlation_id=correlation_id)
         new_video_path = os.path.join(VIDEO_SAVE_PATH, f"{new_video_title}{video_ext}")
-        os.rename(f'{VIDEO_SAVE_PATH}/temp{video_ext}', new_video_path)        
+        os.rename(f'{VIDEO_SAVE_PATH}/temp_{correlation_id}{video_ext}', new_video_path)        
         success_message = SuccessResponse(data={"video_path": new_video_path, "video_title": new_video_title})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
