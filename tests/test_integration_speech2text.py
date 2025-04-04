@@ -1,9 +1,10 @@
 from app.main import create_app
 from fastapi.testclient import TestClient
+
 import time
 import os
-
 import re
+
 
 def test_speech2text_integration():
     app = create_app()
@@ -29,5 +30,19 @@ def test_speech2text_integration():
         assert os.path.exists(filename)
         os.remove(filename)
 
-# 유효하지 않은 URL로 인한 실패 코드 작성 필요
-# def test_speech2text_integration_except():
+
+def test_speech2text_integration_except(): # 잘못된 URL
+    app = create_app()
+
+    with TestClient(app) as client:
+        payload = {
+            "url": "https://www.youtube.com/",
+            "title": "잘못된 url"
+        }
+
+        response = client.post("/Speech-to-Text/", json=payload)
+        assert response.status_code == 200 # HTTP 200이어도 내부 status로 실패 판단
+
+        body = response.json()
+
+        assert body["error"]["code"].startswith("5003")  # 500 (SERVER_ERROR) + 3 (VIDEO) + 001 (Unknown Error)

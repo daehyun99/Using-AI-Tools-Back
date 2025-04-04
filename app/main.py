@@ -21,14 +21,6 @@ def create_app():
     """
     app = FastAPI(lifespan=lifespan)
 
-    # 테스트 코드
-    if ENV == "development":
-        from app.test import db_test, llm_test
-        from app.common.config import DevConfig
-        from dataclasses import asdict
-        arg = asdict(DevConfig())
-        db_test.test1(**arg)
-        llm_test.test2(enabled=False) # True -> 예외 발생, False -> 정상 작동
     
 
 

@@ -15,11 +15,16 @@ from app.models import Video, Document_, TranslateService
 from fastapi.responses import FileResponse
 from fastapi import UploadFile, BackgroundTasks
 
+from app.api import exceptions as ex
+from app.common.utils import logging_response
+
 from app.database.conn import db
+
+layer = "PRESENTATION"
 
 router = APIRouter()
 
-@router.post("/Speech-to-Text/", response_class=FileResponse)
+@router.post("/Speech-to-Text/")
 async def Speech2Text(request: Request, video: Video, backgroundtasks: BackgroundTasks):
     """
     `Pipeline API`
@@ -32,9 +37,17 @@ async def Speech2Text(request: Request, video: Video, backgroundtasks: Backgroun
     
 
     download_result = await download_video(video, session=session, correlation_id=correlation_id)
+    if download_result.status != 200 or not download_result.data:
+        error_message = ex.ErrorResponse_Video()
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
+    
     video.path = download_result.data["video_path"]
 
     rename_result = await rename_video(video, session=session, correlation_id=correlation_id)
+    if rename_result.status != 200 or not rename_result.data:
+        error_message = ex.ErrorResponse_Video()
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
+    
     video.path = rename_result.data["video_path"]
     video.title = rename_result.data["video_title"]
     
@@ -53,7 +66,8 @@ async def Speech2Text(request: Request, video: Video, backgroundtasks: Backgroun
     try:
         backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)
     except Exception as e:
-        print(f"Error adding background task: {e}")
+        error_message = ex.ErrorResponse(ex=e)
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
 
     return FileResponse(path=document.path, filename=f"{video.title}.docx")
 
