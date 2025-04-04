@@ -21,14 +21,6 @@ def create_app():
     """
     app = FastAPI(lifespan=lifespan)
 
-    # 테스트 코드
-    if ENV == "development":
-        from app.test import db_test, llm_test
-        from app.common.config import DevConfig
-        from dataclasses import asdict
-        arg = asdict(DevConfig())
-        db_test.test1(**arg)
-        llm_test.test2(enabled=False) # True -> 예외 발생, False -> 정상 작동
     
 
 
@@ -51,8 +43,8 @@ def create_app():
         app.include_router(PipeLine.router, tags=["PipeLine"])
         app.include_router(TranslateManager.router, tags=["Translate"])
 
-    # 배포용 라우터 정의
-    elif ENV == "production": 
+    # 배포용, 테스트용 라우터 정의
+    elif ENV == "production" or ENV == "test": 
         app.include_router(PipeLine.router, tags=["PipeLine"])
     
     
