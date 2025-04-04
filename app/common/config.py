@@ -52,11 +52,17 @@ class ProbConfig(Config):
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
 
+@dataclass
+class TestConfig(Config):
+    DB_URL: str = f"mysql+pymysql://{DB_USER}:{DB_PW}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
+    TRUSTED_HOSTS = ["*"]
+    ALLOW_SITE = ["*"]
+
 
 def conf():
     """
     환경 불러오기
     :return:
     """
-    config = dict(production=ProbConfig(), development=DevConfig())
+    config = dict(production=ProbConfig(), development=DevConfig(), test=TestConfig())
     return config.get(ENV, DevConfig())

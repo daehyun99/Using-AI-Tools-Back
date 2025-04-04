@@ -51,8 +51,8 @@ def create_app():
         app.include_router(PipeLine.router, tags=["PipeLine"])
         app.include_router(TranslateManager.router, tags=["Translate"])
 
-    # 배포용 라우터 정의
-    elif ENV == "production": 
+    # 배포용, 테스트용 라우터 정의
+    elif ENV == "production" or ENV == "test": 
         app.include_router(PipeLine.router, tags=["PipeLine"])
     
     

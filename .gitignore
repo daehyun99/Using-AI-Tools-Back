@@ -7,3 +7,4 @@ example.pdf
 temps.log
 
 .coverage
+.pytest_cache
