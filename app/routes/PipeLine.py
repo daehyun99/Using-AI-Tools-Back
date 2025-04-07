@@ -31,47 +31,46 @@ async def Speech2Text(request: Request, video: Video, backgroundtasks: Backgroun
     :param VideoDownload:
     :return docs:
     """
-    session = next(db.session())
-    correlation_id = generate_metadata()
-    # logging_request
-    
-
-    download_result = await download_video(video, session=session, correlation_id=correlation_id)
-    if download_result.status != 200 or not download_result.data:
-        error_message = ex.ErrorResponse_Video()
-        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
-    
-    video.path = download_result.data["video_path"]
-
-    rename_result = await rename_video(video, session=session, correlation_id=correlation_id)
-    if rename_result.status != 200 or not rename_result.data:
-        error_message = ex.ErrorResponse_Video()
-        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
-    
-    video.path = rename_result.data["video_path"]
-    video.title = rename_result.data["video_title"]
-    
-    model = request.app.state.whisperAI_model
-    
-    # whisperAI_model = get_whisper_model(whisperAI_model= whisperAI_model, session=session, correlation_id=correlation_id)
-    result = model.transcribe(video.path, task="transcribe")
-
-    document = Document_(path=f"{DOCS_SAVE_PATH}/{video.title}.docx")
-    doc = Document()
-    doc.add_paragraph(result['text'])
-    doc.save(document.path)
-
-    await delete_video(video, session=session, correlation_id=correlation_id)
-    
     try:
+        session = next(db.session())
+        correlation_id = generate_metadata()
+        # logging_request
+        
+        download_result = await download_video(video, session=session, correlation_id=correlation_id)
+        if download_result.status != 200 or not download_result.data:
+            error_message = ex.ErrorResponse_Video()
+            return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
+        
+        video.path = download_result.data["video_path"]
+
+        rename_result = await rename_video(video, session=session, correlation_id=correlation_id)
+        if rename_result.status != 200 or not rename_result.data:
+            error_message = ex.ErrorResponse_Video()
+            return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
+        
+        video.path = rename_result.data["video_path"]
+        video.title = rename_result.data["video_title"]
+        
+        model = request.app.state.whisperAI_model
+        
+        # whisperAI_model = get_whisper_model(whisperAI_model= whisperAI_model, session=session, correlation_id=correlation_id)
+        result = model.transcribe(video.path, task="transcribe")
+
+        document = Document_(path=f"{DOCS_SAVE_PATH}/{video.title}.docx")
+        doc = Document()
+        doc.add_paragraph(result['text'])
+        doc.save(document.path)
+
+        await delete_video(video, session=session, correlation_id=correlation_id)
+        
         backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)
+        return FileResponse(path=document.path, filename=f"{video.title}.docx")
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
+        
 
-    return FileResponse(path=document.path, filename=f"{video.title}.docx")
-
-@router.post("/Translate/", response_class=FileResponse)
+@router.post("/Translate/")
 async def Translate(file: UploadFile, service: TranslateService, backgroundtasks: BackgroundTasks):
     """
     `Pipeline API`
