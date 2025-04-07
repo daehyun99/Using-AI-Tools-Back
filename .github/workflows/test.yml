@@ -40,12 +40,12 @@ jobs:
 
       - name: Generate HTML coverage report sample test1
         run: |
-          docker exec fastapi_server pytest tests/test_sample1.py --cov=. --cov-report=term-missing -s \
+          docker exec fastapi_server pytest tests/test_sample1.py --cov=. --cov-report=html -s
           docker cp fastapi_server:/app/htmlcov ./htmlcov
 
       - name: Generate HTML coverage report
         run: |
-          docker exec fastapi_server pytest tests/test_sample2.py --cov=. --cov-report=term-missing -s \
+          docker exec fastapi_server pytest tests/test_sample2.py --cov=. --cov-report=html -s
           docker cp fastapi_server:/app/htmlcov ./htmlcov
 
       # - name: Run tests inside fastapi container
