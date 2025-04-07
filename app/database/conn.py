@@ -63,7 +63,7 @@ class SQLAlchemy:
         :return:
         """
         close_all_sessions()
-        if db._engine:
+        if hasattr(db, "_engine") and db._engine:
             db._engine.dispose()
         logger.info("✅ DB disconnected")
         
