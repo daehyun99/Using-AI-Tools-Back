@@ -58,7 +58,7 @@ def WhisperLoader(whisperAI_model):
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
 
 
-async def WhisperUnLoader(whisperAI_model):
+def WhisperUnLoader(whisperAI_model):
     session = next(db.session())
     correlation_id = generate_metadata()
     # logging_request

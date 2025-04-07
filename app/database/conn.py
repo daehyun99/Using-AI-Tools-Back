@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker, close_all_sessions
 
 from app.api import exceptions as ex
 
@@ -62,8 +62,9 @@ class SQLAlchemy:
         DB 연결 해제 함수
         :return:
         """
-        db._session.close_all()
-        db._engine.dispose()
+        close_all_sessions()
+        if db._engine:
+            db._engine.dispose()
         logger.info("✅ DB disconnected")
         
 

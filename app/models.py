@@ -1,7 +1,7 @@
 from typing import Optional
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class Video(BaseModel):
@@ -10,12 +10,13 @@ class Video(BaseModel):
     path: Optional[str] = None
     title: Optional[str] = None
 
-    class Config:
+    model_config = ConfigDict(
         json_schema_extra = {
             "example": {
                 "url": "https://www.youtube.com/"
             }
         }
+    )
 
 class Document_(BaseModel):
     """Document 반환용 모델"""
@@ -23,12 +24,13 @@ class Document_(BaseModel):
     mono_path: Optional[str] = None
     dual_path: Optional[str] = None
 
-    class Config:
+    model_config = ConfigDict(
         json_schema_extra = {
             "example": {
                 "path": "app/tmp/docs/test_result.docx"
             }
         }
+    )
 
 class TranslateService(str, Enum):
     """Translate 서비스 모델"""
