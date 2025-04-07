@@ -1,5 +1,5 @@
 from app.common.const import DOCS_SAVE_PATH
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from docx import Document
 # from app.services.llm_models import get_whisper_model
 # from app.common.lifespan import whisperAI_model
@@ -18,6 +18,7 @@ from fastapi import UploadFile, BackgroundTasks
 from app.api import exceptions as ex
 from app.common.utils import logging_response
 
+from sqlalchemy.orm import Session
 from app.database.conn import db
 
 layer = "PRESENTATION"
@@ -25,17 +26,16 @@ layer = "PRESENTATION"
 router = APIRouter()
 
 @router.post("/Speech-to-Text/")
-async def Speech2Text(request: Request, video: Video, backgroundtasks: BackgroundTasks):
+async def Speech2Text(request: Request, video: Video, backgroundtasks: BackgroundTasks, session: Session = Depends(db.get_db)):
     """
     `Pipeline API`
     :param VideoDownload:
     :return docs:
     """
     try:
-        session = next(db.session())
         correlation_id = generate_metadata()
         # logging_request
-        
+
         download_result = await download_video(video, session=session, correlation_id=correlation_id)
         if download_result.status != 200 or not download_result.data:
             error_message = ex.ErrorResponse_Video()
@@ -71,14 +71,13 @@ async def Speech2Text(request: Request, video: Video, backgroundtasks: Backgroun
         
 
 @router.post("/Translate/")
-async def Translate(file: UploadFile, service: TranslateService, backgroundtasks: BackgroundTasks):
+async def Translate(file: UploadFile, service: TranslateService, backgroundtasks: BackgroundTasks, session: Session = Depends(db.get_db)):
     """
     `Pipeline API`
     :param file:
     :return docs:
     """
     try:
-        session = next(db.session())
         correlation_id = generate_metadata()
         # logging_request
         
