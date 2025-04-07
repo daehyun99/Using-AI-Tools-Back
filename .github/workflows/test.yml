@@ -1,4 +1,4 @@
-name: pytest
+name: pytest docker compose
 
 on:
     push:
