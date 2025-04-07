@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build and run containers
         run: docker-compose up -d --build
@@ -40,7 +40,7 @@ jobs:
           docker cp fastapi_server:/app/htmlcov ./htmlcov
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-html
           path: htmlcov
