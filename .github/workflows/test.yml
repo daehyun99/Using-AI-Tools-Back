@@ -26,29 +26,11 @@ jobs:
           echo "DEEPL_AUTH_KEY=${{ secrets.DEEPL_AUTH_KEY }}" >> .env
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-docker-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-
-
       - name: Build and run containers
-        run: |
-          docker buildx build \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
-            --cache-to=type=local,dest=/tmp/.buildx-cache \
-            --tag fastapi_server:latest \
-            --load \
-            -f Dockerfile \
-            .
+        run: docker compose up -d --build
 
-          docker compose up -d
 
+      
       - name: Wait for DB to be ready
         run: sleep 20
 
