@@ -1,0 +1,50 @@
+name: pytest
+
+on:
+    push:
+      branches: [ main, chore/setup-cicd ]
+    pull_request:
+      branches: [ main ]
+
+jobs:
+  test:
+    if: github.actor == github.repository_owner
+    runs-on: ubuntu-latest
+
+    env:
+        MYSQL_ROOT_PW: ${{ secrets.MYSQL_ROOT_PW }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PW: ${{ secrets.DB_PW }}
+        DB_PORT: 3306
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DEEPL_AUTH_KEY: ${{ secrets.DEEPL_AUTH_KEY }} 
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build and run containers
+        run: docker-compose up -d --build
+
+      - name: Wait for DB to be ready
+        run: sleep 20
+
+      - name: Run tests inside fastapi container
+        run: docker exec fastapi_server pytest --cov=. --cov-report=term-missing
+
+      - name: Generate HTML coverage report
+        run: |
+          docker exec fastapi_server pytest --cov=. --cov-report=html
+          docker cp fastapi_server:/app/htmlcov ./htmlcov
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-html
+          path: htmlcov
+
+      - name: Tear down
+        if: always()
+        run: docker-compose down
