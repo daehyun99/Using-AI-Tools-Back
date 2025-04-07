@@ -11,16 +11,6 @@ jobs:
     if: github.actor == github.repository_owner
     runs-on: ubuntu-latest
 
-    env:
-        MYSQL_ROOT_PW: ${{ secrets.MYSQL_ROOT_PW }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PW: ${{ secrets.DB_PW }}
-        DB_PORT: 3306
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DEEPL_AUTH_KEY: ${{ secrets.DEEPL_AUTH_KEY }} 
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,6 +18,17 @@ jobs:
       - name: Build and run containers
         run: docker compose up -d --build
 
+      - name: Generate .env file
+        run: |
+          echo "MYSQL_ROOT_PW=${{ secrets.MYSQL_ROOT_PW }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PW=${{ secrets.DB_PW }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DEEPL_AUTH_KEY=${{ secrets.DEEPL_AUTH_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+      
       - name: Wait for DB to be ready
         run: sleep 20
 
