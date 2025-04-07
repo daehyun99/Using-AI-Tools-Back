@@ -3,7 +3,6 @@ code
 __pycache__
 
 tmp
-example.pdf
 temps.log
 
 .coverage

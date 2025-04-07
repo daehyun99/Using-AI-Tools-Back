@@ -15,6 +15,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
       - name: Generate .env file
         run: |
           echo "MYSQL_ROOT_PW=${{ secrets.MYSQL_ROOT_PW }}" >> .env
@@ -27,7 +38,17 @@ jobs:
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
 
       - name: Build and run containers
-        run: docker compose up -d --build
+        run: |
+          docker buildx build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache \
+            --target fastapi \
+            --tag fastapi_server:latest \
+            --load \
+            -f Dockerfile \
+            .
+
+          docker compose up -d
 
       - name: Wait for DB to be ready
         run: sleep 20
