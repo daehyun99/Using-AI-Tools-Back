@@ -38,15 +38,18 @@ jobs:
       - name: Run sample test2
         run: docker exec fastapi_server pytest tests/test_sample2.py --cov=. --cov-report=term-missing -s
 
-      - name: Generate HTML coverage report sample test1
-        run: |
-          docker exec fastapi_server pytest tests/test_sample1.py --cov=. --cov-report=html -s
-          docker cp fastapi_server:/app/htmlcov ./htmlcov
+      ### mkdir /home/runner/work/Using-AI-Tools/Using-AI-Tools/htmlcov/htmlcov: permission denied
+      ### https://github.com/daehyun99/Using-AI-Tools/actions/runs/14319046559/job/40131795449
 
-      - name: Generate HTML coverage report
-        run: |
-          docker exec fastapi_server pytest tests/test_sample2.py --cov=. --cov-report=html -s
-          docker cp fastapi_server:/app/htmlcov ./htmlcov
+      # - name: Generate HTML coverage report sample test1
+      #   run: |
+      #     docker exec fastapi_server pytest tests/test_sample1.py --cov=. --cov-report=html -s
+      #     docker cp fastapi_server:/app/htmlcov ./htmlcov_sample1
+
+      # - name: Generate HTML coverage report sample test2
+      #   run: |
+      #     docker exec fastapi_server pytest tests/test_sample2.py --cov=. --cov-report=html -s
+      #     docker cp fastapi_server:/app/htmlcov ./htmlcov_sample2
 
       # - name: Run tests inside fastapi container
       #   run: |
