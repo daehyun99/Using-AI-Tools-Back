@@ -20,7 +20,8 @@ def download_video_(video_url, session, correlation_id, VIDEO_SAVE_PATH=VIDEO_SA
         if ENV == "test":
             ydl_opts = {
                 'outtmpl': f'{VIDEO_SAVE_PATH}/temp_{correlation_id}.%(ext)s',
-                'cookiefile': 'cookies.txt'
+                'cookiefile': 'cookies.txt',
+                'noplaylist': True
             }
         else:
             ydl_opts = {

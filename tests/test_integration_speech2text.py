@@ -11,7 +11,7 @@ def test_speech2text_integration():
 
     with TestClient(app) as client:
         payload = {
-            "url": "https://youtu.be/pVv7qGvhqvg?si=-DKS5_x_k7boAwjw",
+            "url": "https://youtu.be/pVv7qGvhqvg?si=tpk6IxJqZ0-kesan",
             "title": "이_맛에_강아지_키우지"
         }
 
