@@ -32,6 +32,7 @@ services:
       - backend
     volumes:
       - .:/app
+      - ./cookies.txt:/app/cookies.txt
 
 volumes:
   mysql_data:

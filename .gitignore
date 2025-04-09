@@ -7,3 +7,6 @@ temps.log
 
 .coverage
 .pytest_cache
+
+cookies.txt
+cookies.txt.b64

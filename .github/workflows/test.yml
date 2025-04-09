@@ -17,6 +17,7 @@ jobs:
 
       - name: Generate .env file
         run: |
+          echo "ENV=${{ secrets.ENV }}" >> .env
           echo "MYSQL_ROOT_PW=${{ secrets.MYSQL_ROOT_PW }}" >> .env
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
@@ -25,42 +26,28 @@ jobs:
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "DEEPL_AUTH_KEY=${{ secrets.DEEPL_AUTH_KEY }}" >> .env
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+          
+      
+      - name: Restore cookies.txt
+        run: echo "${{ secrets.COOKIES }}" | base64 -d > cookies.txt
 
       - name: Build and run containers
         run: docker compose up -d --build
 
       - name: Wait for DB to be ready
-        run: sleep 30
+        run: sleep 20
 
       - name: Run sample test1
-        run: docker exec fastapi_server pytest tests/test_sample1.py --cov=. --cov-report=term-missing -s
+        run: docker exec fastapi_server pytest tests/test_sample1.py --cov=app --cov-report=term-missing -s
 
       - name: Run sample test2
-        run: docker exec fastapi_server pytest tests/test_sample2.py --cov=. --cov-report=term-missing -s
+        run: docker exec fastapi_server pytest tests/test_sample2.py --cov=app --cov-report=term-missing -s
 
-      ### mkdir /home/runner/work/Using-AI-Tools/Using-AI-Tools/htmlcov/htmlcov: permission denied
-      ### https://github.com/daehyun99/Using-AI-Tools/actions/runs/14319046559/job/40131795449
+      - name: Run test_integration1
+        run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_speech2text.py -s --cov=app --cov-report=term-missing
 
-      # - name: Generate HTML coverage report sample test1
-      #   run: |
-      #     docker exec fastapi_server pytest tests/test_sample1.py --cov=. --cov-report=html -s
-      #     docker cp fastapi_server:/app/htmlcov ./htmlcov_sample1
-
-      # - name: Generate HTML coverage report sample test2
-      #   run: |
-      #     docker exec fastapi_server pytest tests/test_sample2.py --cov=. --cov-report=html -s
-      #     docker cp fastapi_server:/app/htmlcov ./htmlcov_sample2
-
-      # - name: Run tests inside fastapi container
-      #   run: |
-      #     docker exec -e RUN_INTEGRATION=true fastapi_server \
-      #       pytest tests/ -s --cov=app --cov-report=term-missing
-
-      # - name: Generate HTML coverage report
-      #   run: |
-      #     docker exec -e RUN_INTEGRATION=true fastapi_server \
-      #       pytest tests/ -s --cov=app --cov-report=html
-      #     docker cp fastapi_server:/app/htmlcov ./htmlcov
+      # - name: Run test_integration2
+      #   run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_translate.py -s --cov=app --cov-report=term-missing
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
