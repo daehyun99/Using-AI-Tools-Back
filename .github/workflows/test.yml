@@ -47,11 +47,14 @@ jobs:
         run: docker exec fastapi_server pytest tests/test_sample2.py --cov=app --cov-report=term-missing -s
 
       - name: Run test_integration1
-        run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_speech2text.py -s --cov=app --cov-report=term-missing --cov-report=html:html_1
+        run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_speech2text.py -s --cov=app --cov-report=term-missing --cov-append
 
       - name: Run test_integration2
-        run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_translate.py -s --cov=app --cov-report=term-missing --cov-report=html:html_2
-
+        run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_translate.py -s --cov=app --cov-report=term-missing --cov-append
+      
+      - name: Generate final coverage report (htmlcov)
+        run: docker exec fastapi_server pytest --cov=app --cov-report=html
+      
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:

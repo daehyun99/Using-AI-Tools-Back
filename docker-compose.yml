@@ -38,6 +38,7 @@ services:
       - ./cookies.txt:/app/cookies.txt
       - ./app/tmp/videos/:/app/tmp/videos/
       - ./app/tmp/docs/:/app/tmp/docs/
+      - ./htmlcov:/app/htmlcov
 
 volumes:
   mysql_data:
