@@ -36,7 +36,7 @@ def test_speech2text_integration_except(): # 잘못된 URL
 
     with TestClient(app) as client:
         payload = {
-            "url": "https://www.youtube.com/",
+            "url": "https://www.youtube.com/wrong_url_wrong_url_wrong_url_wrong_url",
             "title": "잘못된 url"
         }
 
