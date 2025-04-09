@@ -11,7 +11,7 @@ def test_speech2text_integration():
 
     with TestClient(app) as client:
         payload = {
-            "url": "https://youtu.be/pVv7qGvhqvg?si=-DKS5_x_k7boAwjw",
+            "url": "https://youtu.be/pVv7qGvhqvg?si=tpk6IxJqZ0-kesan",
             "title": "이_맛에_강아지_키우지"
         }
 
@@ -36,7 +36,7 @@ def test_speech2text_integration_except(): # 잘못된 URL
 
     with TestClient(app) as client:
         payload = {
-            "url": "https://www.youtube.com/",
+            "url": "https://www.youtube.com/wrong_url_wrong_url_wrong_url_wrong_url",
             "title": "잘못된 url"
         }
 

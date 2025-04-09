@@ -1,0 +1,66 @@
+name: pytest docker compose
+
+on:
+    push:
+      branches: [ main, chore/setup-cicd ]
+    pull_request:
+      branches: [ main ]
+
+jobs:
+  test:
+    if: github.actor == github.repository_owner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate .env file
+        run: |
+          echo "ENV=${{ secrets.ENV }}" >> .env
+          echo "MYSQL_ROOT_PW=${{ secrets.MYSQL_ROOT_PW }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PW=${{ secrets.DB_PW }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT || '3306' }}" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DEEPL_AUTH_KEY=${{ secrets.DEEPL_AUTH_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+          
+      
+      - name: Restore cookies.txt
+        run: echo "${{ secrets.COOKIES }}" | base64 -d > cookies.txt
+
+      - name: Build and run containers
+        run: docker compose up -d --build
+
+      - name: Wait for DB to be ready
+        run: sleep 20
+      
+      - name: Check DB connection
+        run: docker exec fastapi_server ping -c 3 db
+
+      - name: Run sample test1
+        run: docker exec fastapi_server pytest tests/test_sample1.py --cov=app --cov-report=term-missing -s
+
+      - name: Run sample test2
+        run: docker exec fastapi_server pytest tests/test_sample2.py --cov=app --cov-report=term-missing -s
+
+      - name: Run test_integration1
+        run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_speech2text.py -s --cov=app --cov-report=term-missing --cov-append
+
+      - name: Run test_integration2
+        run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_translate.py -s --cov=app --cov-report=term-missing --cov-append
+      
+      - name: Generate final coverage report (htmlcov)
+        run: docker exec fastapi_server pytest --cov=app --cov-report=html
+      
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: htmlcov
+
+      - name: Tear down
+        if: always()
+        run: docker compose --env-file /dev/null down

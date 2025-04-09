@@ -1,6 +1,8 @@
 import os
 import re
 
+from app.common.config import ENV
+
 import yt_dlp
 from app.common.config import base_dir
 from app.common.const import VIDEO_SAVE_PATH
@@ -15,9 +17,16 @@ layer = "BUSINESS"
 def download_video_(video_url, session, correlation_id, VIDEO_SAVE_PATH=VIDEO_SAVE_PATH): 
     try:
         # logging_request
-        ydl_opts = {
-            'outtmpl': f'{VIDEO_SAVE_PATH}/temp_{correlation_id}.%(ext)s',
-        }
+        if ENV == "test":
+            ydl_opts = {
+                'outtmpl': f'{VIDEO_SAVE_PATH}/temp_{correlation_id}.%(ext)s',
+                'cookiefile': 'cookies.txt',
+                'noplaylist': True
+            }
+        else:
+            ydl_opts = {
+                'outtmpl': f'{VIDEO_SAVE_PATH}/temp_{correlation_id}.%(ext)s',
+            }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_ = ydl.extract_info(video_url, download=True)
             video_title = info_.get('title', None)

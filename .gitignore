@@ -3,8 +3,10 @@ code
 __pycache__
 
 tmp
-example.pdf
 temps.log
 
 .coverage
 .pytest_cache
+
+cookies.txt
+cookies.txt.b64

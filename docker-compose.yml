@@ -11,7 +11,7 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PW}
     ports:
-      - "3307:${DB_PORT}"
+      - 3307:3306
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -28,10 +28,17 @@ services:
       - db
     env_file:
       - .env
+    environment:
+      - VIDEO_SAVE_PATH=/app/tmp/videos/
+      - DOCS_SAVE_PATH=/app/tmp/docs/
     networks:
       - backend
     volumes:
       - .:/app
+      - ./cookies.txt:/app/cookies.txt
+      - ./app/tmp/videos/:/app/tmp/videos/
+      - ./app/tmp/docs/:/app/tmp/docs/
+      - ./htmlcov:/app/htmlcov
 
 volumes:
   mysql_data:
