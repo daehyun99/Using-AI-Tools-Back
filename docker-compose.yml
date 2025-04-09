@@ -28,11 +28,16 @@ services:
       - db
     env_file:
       - .env
+    environment:
+      - VIDEO_SAVE_PATH=/app/tmp/videos/
+      - DOCS_SAVE_PATH=/app/tmp/docs/
     networks:
       - backend
     volumes:
       - .:/app
       - ./cookies.txt:/app/cookies.txt
+      - ./app/tmp/videos/:/app/tmp/videos/
+      - ./app/tmp/docs/:/app/tmp/docs/
 
 volumes:
   mysql_data:
