@@ -11,7 +11,7 @@ from app.common.logger import logger
 
 
 # 개발용
-from app.routes import VideoManager, FileManager, TranslateManager
+from app.routes import VideoManager, FileManager, TranslateManager, EmailManager
 
 
 def create_app():
@@ -40,6 +40,7 @@ def create_app():
     if ENV == "development": 
         app.include_router(VideoManager.router, tags=["VideoManager"])
         app.include_router(FileManager.router, tags=["FileManager"])
+        app.include_router(EmailManager.router, tags=["EmailManager"])
         app.include_router(PipeLine.router, tags=["PipeLine"])
         app.include_router(TranslateManager.router, tags=["Translate"])
 

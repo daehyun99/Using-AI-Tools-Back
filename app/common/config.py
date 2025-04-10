@@ -28,6 +28,15 @@ DB_HOST = getenv("DB_HOST")
 DB_PORT = getenv("DB_PORT")
 DB_NAME = getenv("DB_NAME")
 
+# E-mail
+test_receiver = getenv("EMAIL_RECEIVER_TEST")
+sender = getenv("EMAIL_SENDER")
+smtp_server = getenv("SMTP_SERVER")
+smtp_port = getenv("SMTP_PORT")
+login_id = getenv("EMAIL_LOGIN_ID")
+login_pw = getenv("EMAIL_LOGIN_PW")
+survey_form_url = getenv("SURVEY_FORM_URL")
+
 # ================================================================================ #
 # Databases
 

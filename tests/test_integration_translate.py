@@ -3,6 +3,8 @@ import pytest
 from app.main import create_app
 from fastapi.testclient import TestClient
 
+from app.common.config import test_receiver
+
 import time
 import os
 import re
@@ -19,11 +21,12 @@ def test_translate_integration(service_name):
             files = {
                 "file": ("example.pdf", f, "application/pdf")
             }
-            response = client.post(f"/Translate/?service={service_name}", files=files)
+            response = client.post(f"/Translate/?service={service_name}&email_address={test_receiver}", files=files)
 
         assert response.status_code == 200
-        assert "application/pdf" in response.headers["content-type"] or "application/octet-stream" in response.headers["content-type"]
-        assert response.headers.get("content-disposition", "").startswith("attachment")
+        json_data = response.json()
+
+        assert json_data["status"] == 200
 
 
 def test_translate_integration_except():
