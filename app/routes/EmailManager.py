@@ -27,6 +27,7 @@ async def email_send_sample(session: Session = Depends(db.get_db)):
         from email.mime.multipart import MIMEMultipart
         from email.mime.text import MIMEText
         from email.mime.application import MIMEApplication
+        from email.mime.image import MIMEImage
 
         # 환경변수
         test_receiver = getenv("EMAIL_RECEIVER")
@@ -41,23 +42,29 @@ async def email_send_sample(session: Session = Depends(db.get_db)):
         # logging_request
         subject = "PDF 파일 첨부 메일 전송 테스트"
         receiver_name = test_receiver.split("@")[0]
-        body = f"""안녕하세요! {receiver_name} 님.
-                PDF 파일 첨부 메일 전송 테스트입니다.
-                ✅🟥🗨✨😀
-
-                감사합니다.
-                {sender} 드림.
-                """
-        
-        msg = MIMEMultipart()
+        body = f"""<html>
+            <head></head>
+            <body>
+                <h3 data-ke-size="size23"><b>안녕하세요!</b>&nbsp;{receiver_name}&nbsp;님. <br />PDF&nbsp;파일&nbsp;첨부&nbsp;<span style="background-color: #ee2323;">메일</span>&nbsp;<span style="color: #ee2323;">전송</span>&nbsp;<u>테스트</u>입니다. <br />✅🟥🗨✨😀 <br /><br />감사합니다. <br />{sender}&nbsp;드림.</h3>
+                <img src="cid:image1">
+            </body>
+        </html>
+        """
+        msg = MIMEMultipart("related")
         msg["From"] = sender
         msg["To"] = test_receiver
         msg["Subject"] = subject
 
-        msg.attach(MIMEText(body, "plain"))
+        msg_alternative = MIMEMultipart("alternative")
+        msg.attach(msg_alternative)
+        msg_alternative.attach(MIMEText(body, "html"))
 
-        pdf_path = "tests/example.pdf"  # 여기에 첨부할 PDF 파일 경로 입력
-        with open(pdf_path, "rb") as f:
+        with open("tests/gooddog.jpg", "rb") as img:
+            mime_img = MIMEImage(img.read())
+            mime_img.add_header("Content-ID", "<image1>")
+            msg.attach(mime_img)
+
+        with open("tests/example.pdf", "rb") as f:
             pdf_attachment = MIMEApplication(f.read(), _subtype="pdf")
             pdf_attachment.add_header("Content-Disposition", "attachment", filename="테스트용-첨부파일.pdf")
             msg.attach(pdf_attachment)
