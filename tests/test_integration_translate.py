@@ -22,15 +22,16 @@ def test_translate_integration(service_name):
             files = {
                 "file": ("example.pdf", f, "application/pdf")
             }
+            params = {
+                "service": service_name
+            }
             data = {
-                "service": service_name,
                 "email_address": receiver_email
             }
-            response = client.post(f"/Translate/?service={service_name}", files=files, data=data)
+            response = client.post(f"/Translate/", params=params, files=files, data=data)
 
         assert response.status_code == 200
         json_data = response.json()
-
 
         assert "status" in json_data or "message" in json_data
         assert json_data.get("status", "success").lower() in ["success", "ok"]
