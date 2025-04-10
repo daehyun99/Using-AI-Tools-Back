@@ -1,61 +1,70 @@
 from app.common.utils import logging_response
 
-layer = "BUSINESS"
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+from email.mime.image import MIMEImage
+
+from app.common.config import sender, smtp_server, smtp_port, login_id, login_pw, survey_form_url, test_receiver
 
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 
-def send_email_sample_(session, correlation_id):
+layer = "BUSINESS"
+
+def send_email_(session, correlation_id, receiver=test_receiver, file_path = "tests/example.pdf"):
     """
     `Email API`
     :return:
     """
     try:
-        # import
-        from os import getenv
-        import smtplib
-        from email.mime.multipart import MIMEMultipart
-        from email.mime.text import MIMEText
-        from email.mime.application import MIMEApplication
-        from email.mime.image import MIMEImage
-
-        # 환경변수
-        test_receiver = getenv("EMAIL_RECEIVER")
-        sender = getenv("Email_SENDER")
-        smtp_server = getenv("SMTP_SERVER")
-        smtp_port = getenv("SMTP_PORT")
-        login_id = getenv("Email_LOGIN_ID")
-        login_pw = getenv("Email_LOGIN_PW")
-        
         # logging_request
 
-        subject = "PDF 파일 첨부 메일 전송 테스트"
-        receiver_name = test_receiver.split("@")[0]
-        body = f"""<html>
-            <head></head>
-            <body>
-                <h3 data-ke-size="size23"><b>안녕하세요!</b>&nbsp;{receiver_name}&nbsp;님. <br />PDF&nbsp;파일&nbsp;첨부&nbsp;<span style="background-color: #ee2323;">메일</span>&nbsp;<span style="color: #ee2323;">전송</span>&nbsp;<u>테스트</u>입니다. <br />✅🟥🗨✨😀 <br /><br />감사합니다. <br />{sender}&nbsp;드림.</h3>
-                <img src="cid:image1">
-            </body>
+        subject = "[Using-AI-tools] 요청하신 논문 번역본 송부드립니다."
+        receiver_name = receiver.split("@")[0]
+        body = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+            <div style="max-width: 600px; margin: auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+            <h2 style="color: #333;">안녕하세요, <span style="color: #007bff;">{receiver_name}</span> 님.</h2>
+
+            <p style="font-size: 16px; color: #555;">
+                <b>Using-AI-Tools 논문 번역 서비스</b>를 이용해주셔서 진심으로 감사드립니다.
+            </p>
+
+            <p style="font-size: 16px; color: #555;">
+                저희 서비스에 대한 간단한 설문에 참여해주시면,  
+                <span style="color: #e74c3c;"><b>번역된 논문 3편</b></span>을 추가로 보내드리고 있습니다. <br />
+                아래 링크를 통해 설문에 응답해주시면 감사하겠습니다.
+            </p>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{survey_form_url}" style="background-color: #007bff; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-size: 16px;">
+                🔗 설문 참여하기
+                </a>
+            </div>
+
+            <p style="font-size: 15px; color: #999; margin-top: 40px;">
+                감사합니다.<br/>
+                <b>Using-AI-Tools 드림</b>
+            </p>
+            </div>
+        </body>
         </html>
         """
         msg = MIMEMultipart("related")
         msg["From"] = sender
-        msg["To"] = test_receiver
+        msg["To"] = receiver
         msg["Subject"] = subject
 
         msg_alternative = MIMEMultipart("alternative")
         msg.attach(msg_alternative)
         msg_alternative.attach(MIMEText(body, "html"))
 
-        with open("tests/gooddog.jpg", "rb") as img:
-            mime_img = MIMEImage(img.read())
-            mime_img.add_header("Content-ID", "<image1>")
-            msg.attach(mime_img)
-
-        with open("tests/example.pdf", "rb") as f:
+        with open(f"{file_path}", "rb") as f:
             pdf_attachment = MIMEApplication(f.read(), _subtype="pdf")
-            pdf_attachment.add_header("Content-Disposition", "attachment", filename="테스트용-첨부파일.pdf")
+            pdf_attachment.add_header("Content-Disposition", "attachment", filename="paper.pdf")
             msg.attach(pdf_attachment)
 
         with smtplib.SMTP(smtp_server, smtp_port) as server:

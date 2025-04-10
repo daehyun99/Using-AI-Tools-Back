@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.services.emailmanage import send_email_sample_
+from app.services.emailmanage import send_email_
 from starlette.background import BackgroundTasks
 
 from app.common.utils import logging_response
@@ -17,7 +17,7 @@ router = APIRouter(prefix="/email")
 layer = "PRESENTATION"
 
 @router.post("/send/")
-async def send_email_sample(background_tasks: BackgroundTasks, session: Session = Depends(db.get_db)):
+async def send_email(background_tasks: BackgroundTasks, session: Session = Depends(db.get_db)):
     """
     `Email API`
     :return:
@@ -26,7 +26,7 @@ async def send_email_sample(background_tasks: BackgroundTasks, session: Session 
         correlation_id = generate_metadata()
         # logging_request
 
-        background_tasks.add_task(send_email_sample_, session=session, correlation_id=correlation_id)
+        background_tasks.add_task(send_email_, session=session, correlation_id=correlation_id)
  
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
