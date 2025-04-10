@@ -26,8 +26,14 @@ jobs:
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "DEEPL_AUTH_KEY=${{ secrets.DEEPL_AUTH_KEY }}" >> .env
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
-          
-      
+          echo "SMTP_SERVER=${{ secrets.SMTP_SERVER }}" >> .env
+          echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> .env
+          echo "EMAIL_LOGIN_ID=${{ secrets.EMAIL_LOGIN_ID }}" >> .env
+          echo "EMAIL_LOGIN_PW=${{ secrets.EMAIL_LOGIN_PW }}" >> .env
+          echo "EMAIL_SENDER=${{ secrets.EMAIL_SENDER }}" >> .env
+          echo "EMAIL_RECEIVER_TEST=${{ secrets.EMAIL_RECEIVER_TEST }}" >> .env
+          echo "SURVEY_FORM_URL=${{ secrets.SURVEY_FORM_URL }}" >> .env
+
       - name: Restore cookies.txt
         run: echo "${{ secrets.COOKIES }}" | base64 -d > cookies.txt
 
