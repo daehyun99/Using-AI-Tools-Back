@@ -5,9 +5,6 @@ from sqlalchemy.orm import sessionmaker, close_all_sessions
 
 from app.api import exceptions as ex
 
-from app.common.logger import logger
-
-
 class SQLAlchemy:
     def __init__(self, app: FastAPI = None, **kwargs):
         self._engine = None
@@ -34,7 +31,6 @@ class SQLAlchemy:
 
         self._session = sessionmaker(autocommit=False, autoflush=False, bind=self._engine)
         db._engine.connect()
-        logger.info("✅ DB connected")
         
     def get_db(self):
         """
@@ -65,7 +61,6 @@ class SQLAlchemy:
         close_all_sessions()
         if hasattr(db, "_engine") and db._engine:
             db._engine.dispose()
-        logger.info("✅ DB disconnected")
         
 
     @property

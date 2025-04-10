@@ -19,7 +19,6 @@ OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 
 # Models
 OPENAI_MODEL = getenv("OPENAI_MODEL", "gpt-4o")
-whisperAI_MODEL_NAME = getenv("WHISPER_MODEL_NAME", "tiny")
 
 # Databases
 DB_USER = getenv("DB_USER")

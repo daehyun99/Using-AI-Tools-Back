@@ -2,7 +2,7 @@ name: pytest docker compose
 
 on:
     push:
-      branches: [ main, chore/setup-cicd ]
+      branches: [ main, deploy/v1.0.0 ]
     pull_request:
       branches: [ main ]
 
@@ -51,9 +51,6 @@ jobs:
 
       - name: Run sample test2
         run: docker exec fastapi_server pytest tests/test_sample2.py --cov=app --cov-report=term-missing -s
-
-      - name: Run test_integration1
-        run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_speech2text.py -s --cov=app --cov-report=term-missing --cov-append
 
       - name: Run test_integration2
         run: docker exec -e RUN_INTEGRATION=true fastapi_server pytest tests/test_integration_translate.py -s --cov=app --cov-report=term-missing --cov-append
