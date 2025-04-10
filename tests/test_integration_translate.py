@@ -16,25 +16,17 @@ def test_translate_integration(service_name):
 
     with TestClient(app) as client:
         test_file_path = os.path.join("tests", "example.pdf")
-        receiver_email = test_receiver
 
         with open(test_file_path, "rb") as f:
             files = {
                 "file": ("example.pdf", f, "application/pdf")
             }
-            params = {
-                "service": service_name
-            }
-            data = {
-                "email_address": receiver_email
-            }
-            response = client.post(f"/Translate/", params=params, files=files, data=data)
+            response = client.post(f"/Translate/?service={service_name}&email_address={test_receiver}", files=files)
 
         assert response.status_code == 200
         json_data = response.json()
 
-        assert "status" in json_data or "message" in json_data
-        assert json_data.get("status", "success").lower() in ["success", "ok"]
+        assert json_data["status"] == 200
 
 
 def test_translate_integration_except():

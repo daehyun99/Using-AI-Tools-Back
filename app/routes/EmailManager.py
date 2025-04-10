@@ -23,7 +23,6 @@ async def send_email(file_path, receiver, session, correlation_id):
     :return:
     """
     try:
-        correlation_id = generate_metadata()
         # logging_request
 
         send_email_(file_path, receiver, session=session, correlation_id=correlation_id)
