@@ -17,7 +17,7 @@ router = APIRouter(prefix="/email")
 layer = "PRESENTATION"
 
 @router.post("/send/")
-async def send_email(background_tasks: BackgroundTasks, session: Session = Depends(db.get_db)):
+async def send_email(file_path, receiver, session, correlation_id):
     """
     `Email API`
     :return:
@@ -26,7 +26,7 @@ async def send_email(background_tasks: BackgroundTasks, session: Session = Depen
         correlation_id = generate_metadata()
         # logging_request
 
-        background_tasks.add_task(send_email_, session=session, correlation_id=correlation_id)
+        send_email_(file_path, receiver, session=session, correlation_id=correlation_id)
  
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)

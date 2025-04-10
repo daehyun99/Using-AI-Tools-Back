@@ -6,14 +6,14 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from email.mime.image import MIMEImage
 
-from app.common.config import sender, smtp_server, smtp_port, login_id, login_pw, survey_form_url, test_receiver
+from app.common.config import sender, smtp_server, smtp_port, login_id, login_pw, survey_form_url
 
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 
 layer = "BUSINESS"
 
-def send_email_(session, correlation_id, receiver=test_receiver, file_path = "tests/example.pdf"):
+def send_email_(file_path, receiver, session, correlation_id):
     """
     `Email API`
     :return:

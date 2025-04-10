@@ -8,6 +8,7 @@ from app.common.utils import generate_metadata
 from app.routes.VideoManager import download_video, rename_video, delete_video
 from app.routes.FileManager import delete_file, upload_file
 from app.routes.TranslateManager import translate
+from app.routes.EmailManager import send_email
 from app.services.translatemanage import translate_
 
 import os
@@ -15,6 +16,7 @@ from app.models import Video, Document_, TranslateService
 from fastapi.responses import FileResponse
 from fastapi import UploadFile, BackgroundTasks
 
+from app.api.response import SuccessResponse
 from app.api import exceptions as ex
 from app.common.utils import logging_response
 
@@ -71,7 +73,7 @@ async def Speech2Text(request: Request, video: Video, backgroundtasks: Backgroun
         
 
 @router.post("/Translate/")
-async def Translate(file: UploadFile, service: TranslateService, backgroundtasks: BackgroundTasks, session: Session = Depends(db.get_db)):
+async def Translate(file: UploadFile, service: TranslateService, email_address: str, backgroundtasks: BackgroundTasks, session: Session = Depends(db.get_db)):
     """
     `Pipeline API`
     :param file:
@@ -89,9 +91,11 @@ async def Translate(file: UploadFile, service: TranslateService, backgroundtasks
         document.mono_path = os.path.join(f"{DOCS_SAVE_PATH}", mono_document_title_ext)
         document.dual_path = os.path.join(f"{DOCS_SAVE_PATH}", dual_document_title_ext)
         
-
+        backgroundtasks.add_task(send_email, file_path=document.mono_path, receiver=email_address,session=session, correlation_id=correlation_id)
         backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)
 
-        return FileResponse(path=new_document_path, filename=f"{mono_document_title_ext}")
+        success_message = SuccessResponse()
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
-        print(f"Error during translate: {e}")
+        error_message = ex.ErrorResponse(ex=e)
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
