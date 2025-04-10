@@ -39,6 +39,7 @@ graph TD
 - [Home](https://github.com/daehyun99/Using-AI-Tools/wiki)
     - [Milestone](https://github.com/daehyun99/Using-AI-Tools/wiki/Milestone)
     - [API](https://github.com/daehyun99/Using-AI-Tools/wiki/API)
+    - [CICD](https://github.com/daehyun99/Using-AI-Tools/wiki/CICD)
     - [DIR](https://github.com/daehyun99/Using-AI-Tools/wiki/DIR)
     - [ENV](https://github.com/daehyun99/Using-AI-Tools/wiki/ENV)
     - [PROMPT](https://github.com/daehyun99/Using-AI-Tools/wiki/PROMPT)
