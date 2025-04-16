@@ -25,7 +25,7 @@ async def translate_(document_path, service, session, correlation_id):
             cmd = ["pdf2zh", f"{document_path}", "-s", f"{service}", "-li", "EN", "-lo", "KO", "--output", f"{output_dir}"]
 
         elif service == "openai":
-            prompt_path = load_prompt_path("translate__prompt002.txt", session=session, correlation_id=correlation_id)
+            prompt_path = load_prompt_path("translate__prompt003.txt", session=session, correlation_id=correlation_id)
             cmd = ["pdf2zh", f"{document_path}", "-s", f"{service}", "-li", "EN", "-lo", "KO", "--output", f"{output_dir}", "--prompt", f"{prompt_path}"]
 
         result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
