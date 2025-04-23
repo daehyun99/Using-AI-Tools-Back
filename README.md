@@ -34,18 +34,9 @@ graph TD
     한글텍스트 -->|output| AI_Agent
 ```
 
-
-## Wiki
-- [Home](https://github.com/daehyun99/Using-AI-Tools/wiki)
-    - [Milestone](https://github.com/daehyun99/Using-AI-Tools/wiki/Milestone)
-    - [API](https://github.com/daehyun99/Using-AI-Tools/wiki/API)
-    - [CICD](https://github.com/daehyun99/Using-AI-Tools/wiki/CICD)
-    - [DIR](https://github.com/daehyun99/Using-AI-Tools/wiki/DIR)
-    - [ENV](https://github.com/daehyun99/Using-AI-Tools/wiki/ENV)
-    - [PROMPT](https://github.com/daehyun99/Using-AI-Tools/wiki/PROMPT)
-    - [PYTEST](https://github.com/daehyun99/Using-AI-Tools/wiki/PYTEST)
-    - [SCHEMA](https://github.com/daehyun99/Using-AI-Tools/wiki/SCHEMA)
-    - [error-codes](https://github.com/daehyun99/Using-AI-Tools/wiki/error-codes)
+## Documents
+- [wiki](http://github.com/daehyun99/Using-AI-Tools/wiki)
+- [통합 wiki (v1.0.0)](https://github.com/daehyun99/Translate-app/wiki/Back-end)
 
 ## 실행
 ```sh
