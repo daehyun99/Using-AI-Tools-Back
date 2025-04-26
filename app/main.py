@@ -4,7 +4,7 @@ from typing import Union
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import PipeLine
+from app.routes import PipeLine, Auth
 from app.common.lifespan import lifespan
 from app.common.config import conf, ENV
 
@@ -40,10 +40,12 @@ def create_app():
         app.include_router(FileManager.router, tags=["FileManager"])
         app.include_router(EmailManager.router, tags=["EmailManager"])
         app.include_router(PipeLine.router, tags=["PipeLine"])
+        app.include_router(Auth.router, tags=["Auth"])
 
     # 배포용, 테스트용 라우터 정의
     elif ENV == "production" or ENV == "test": 
         app.include_router(PipeLine.router, tags=["PipeLine"])
+        app.include_router(Auth.router, tags=["Auth"])
     
     
     return app

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.services.emailmanage import send_email_
+from app.services.emailmanage import send_email_, send_email2_
 from starlette.background import BackgroundTasks
 
 from app.common.utils import logging_response
@@ -32,4 +32,21 @@ async def send_email(file_path, receiver, session, correlation_id):
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
-    
+
+
+@router.post("/send_id_pw/")
+async def send_email_id_pw(id, pw, email, session, correlation_id):
+    """
+    `Email API`
+    :return id, pw:
+    """
+    try:
+        # logging_request
+
+        await send_email2_(id, pw, email, session=session, correlation_id=correlation_id)
+ 
+        success_message = SuccessResponse()
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
+    except Exception as e:
+        error_message = ex.ErrorResponse(ex=e)
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)

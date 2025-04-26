@@ -22,3 +22,7 @@ class TranslateService(str, Enum):
     # google = "google"
     deepl = "deepl"
     openai = "openai"
+
+class Email(BaseModel):
+    """Email 모델"""
+    email: Optional[str] = None

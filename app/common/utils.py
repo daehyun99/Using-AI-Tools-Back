@@ -3,6 +3,7 @@ from app.api.response import SuccessResponse
 from sqlalchemy.orm import Session
 import json
 
+import re
 from uuid import uuid4
 
 def generate_metadata():
@@ -13,6 +14,30 @@ def generate_metadata():
         if metadata_check:
             metadata = metadata_candidate
     return metadata
+
+def generate_id_pw():
+    id = None
+    pw = None
+    while not id:
+        id_candidate = f"{str(uuid4())[:8]}{str(uuid4())[:8]}"
+        id_check = True # DB에서 id 중복여부를 확인하는 코드로 수정 필요
+        if id_check:
+            id = id_candidate
+    while not pw:
+        pw_candidate = f"{str(uuid4())[:8]}{str(uuid4())[:8]}"
+        pw_check = True # DB에서 pw 중복여부를 확인하는 코드로 수정 필요
+        if pw_check:
+            pw = pw_candidate
+    return id, pw
+
+def is_valid_email(email: str) -> bool:
+    pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+
+    if re.match(pattern, email):
+        return True
+    else:
+        return False
+    
 
 def logging_request(session: Session, layer: str, correlation_id: str, msg: str, metadata: dict):
     log = temps(
