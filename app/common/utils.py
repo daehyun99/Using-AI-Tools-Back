@@ -1,4 +1,4 @@
-from app.database.schema import temps
+from app.database.schema import SYSTEM_LOGS
 from app.api.response import SuccessResponse
 from sqlalchemy.orm import Session
 import json
@@ -15,20 +15,23 @@ def generate_metadata():
             metadata = metadata_candidate
     return metadata
 
-def generate_id_pw():
+def generate_id():
     id = None
-    pw = None
     while not id:
         id_candidate = f"{str(uuid4())[:8]}{str(uuid4())[:8]}"
         id_check = True # DB에서 id 중복여부를 확인하는 코드로 수정 필요
         if id_check:
             id = id_candidate
+    return id
+
+def generate_pw():
+    pw = None
     while not pw:
         pw_candidate = f"{str(uuid4())[:8]}{str(uuid4())[:8]}"
         pw_check = True # DB에서 pw 중복여부를 확인하는 코드로 수정 필요
         if pw_check:
             pw = pw_candidate
-    return id, pw
+    return pw
 
 def is_valid_email(email: str) -> bool:
     pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
@@ -40,7 +43,7 @@ def is_valid_email(email: str) -> bool:
     
 
 def logging_request(session: Session, layer: str, correlation_id: str, msg: str, metadata: dict):
-    log = temps(
+    log = SYSTEM_LOGS(
         layer = layer,
         log_type="REQUEST",
         correlation_id=correlation_id,
@@ -52,7 +55,7 @@ def logging_request(session: Session, layer: str, correlation_id: str, msg: str,
 
 def logging_response(session: Session, layer: str, correlation_id: str, obj: SuccessResponse):
     """ DB에 로깅 + Response 반환"""
-    log = temps(
+    log = SYSTEM_LOGS(
         layer = layer,
         log_type="RESPONSE",
         correlation_id=correlation_id,

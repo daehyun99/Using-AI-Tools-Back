@@ -87,7 +87,7 @@ async def send_email2_(id, pw, email, session, correlation_id):
     try:
         # logging_request
 
-        subject = "[Using-AI-tools] 고유 IW와 PW 발급"
+        subject = "[Using-AI-tools] 고유 ID와 PW 발급"
         receiver_name = email.split("@")[0]
         body = f"""
         <html>

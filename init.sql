@@ -39,12 +39,11 @@ CREATE TABLE SYSTEM_LOGS (
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '로그가 기록된 시간',
     layer ENUM('PRESENTATION', 'BUSINESS', 'PERSISTENCE', 'DATABASE') NOT NULL COMMENT '로그가 기록된 계층',
     log_type ENUM('REQUEST', 'RESPONSE') NOT NULL COMMENT '요청 또는 응답 구분',
-    correlation_id VARCHAR(255) NOT NULL COMMENT 'SERVICE_USAGE 테이블의 correlation_id (FK)',
+    correlation_id VARCHAR(255) NOT NULL COMMENT '요청과 응답을 연계하기 위한 고유 식별자',
     status VARCHAR(255) DEFAULT NULL COMMENT '응답의 상태 코드 또는 메시지 (nullable)',
     msg VARCHAR(255) DEFAULT NULL COMMENT '로그 메시지 (nullable)',
     error JSON DEFAULT NULL COMMENT '오류 발생 시 에러 정보 (nullable, JSON 형식)',
     data JSON DEFAULT NULL COMMENT '요청 또는 응답 데이터 (nullable, JSON 형식)',
     PRIMARY KEY (id),
-    KEY idx_logs_correlation_id (correlation_id),
-    CONSTRAINT fk_logs_service FOREIGN KEY (correlation_id) REFERENCES SERVICE_USAGE(correlation_id) ON DELETE CASCADE
+    KEY idx_logs_correlation_id (correlation_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

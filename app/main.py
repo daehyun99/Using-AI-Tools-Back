@@ -26,7 +26,7 @@ def create_app():
     # 미들웨어 정의
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173"],  # Vite 개발 서버 주소
+        allow_origins=["*"],  # 개발용
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
