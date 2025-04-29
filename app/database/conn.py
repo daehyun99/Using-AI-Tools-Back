@@ -40,7 +40,6 @@ class SQLAlchemy:
         try:
             if self._session is None:
                 error_message = ex.ErrorResponse()
-                print(error_message)
             db_session = None
         except:
             ...
@@ -49,7 +48,6 @@ class SQLAlchemy:
             yield db_session
         except Exception as e:
             error_message = ex.ErrorResponse(ex=e)
-            print(error_message)
         finally:
             db_session.close()
     
