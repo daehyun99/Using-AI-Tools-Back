@@ -6,6 +6,7 @@ from app.common.utils import generate_id, generate_pw, generate_metadata, is_val
 
 from sqlalchemy.orm import Session
 from app.database.conn import db
+from app.database.crud import create_user
 
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
@@ -35,8 +36,10 @@ async def register(email: Email, session: Session = Depends(db.get_db)):
         # 2. 이메일에 대한 고유 ID와 PW를 발급 및 DB로 저장
             # 중복 확인
             # ✅ 발급
-            # DB 저장
+            # ✅ DB 저장
+            # pw 해쉬 적용
         id, pw = generate_id(), generate_pw()
+        create_user(session=session, uuid=id, email=email.email, password_hash=pw, service_enabled=True)
         
         # 3. 해당 이메일로 고유 ID와 PW를 전송
         await send_email_id_pw(id, pw, email.email, session=session, correlation_id=correlation_id)
