@@ -6,7 +6,7 @@ from app.common.utils import generate_id, generate_pw, generate_metadata, is_val
 
 from sqlalchemy.orm import Session
 from app.database.conn import db
-from app.database.crud import create_user, update_user
+from app.database.crud import create_user, read_user_by_email, update_user
 
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
@@ -32,11 +32,15 @@ async def register(email: Email, session: Session = Depends(db.get_db)):
         # 1. 이메일에 대한 검증 
             # ✅ 형식 확인
         if not is_valid_email(email.email):
-            error_message = ex.ErrorResponse(ex=e)
+            error_message = ex.ErrorResponse(ex="이메일 형식이 맞지 않습니다.")
+            return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
+            # ✅ 중복 확인
+        if read_user_by_email(session=session, email=email.email):
+            error_message = ex.ErrorResponse(ex="이미 존재하는 이메일입니다.")
             return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
         
-        # 2. 이메일에 대한 고유 ID와 PW를 발급 및 DB로 저장
-            # 중복 확인
+
+        # 2. 이메일에 대한 고유 ID와 PW를 발급 및 DB로 저장    
             # ✅ 발급
             # ✅ DB 저장
             # pw 해쉬 적용
@@ -92,3 +96,4 @@ async def re_register(session: Session = Depends(db.get_db)):
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
+    
