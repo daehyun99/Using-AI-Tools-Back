@@ -9,6 +9,17 @@ import time
 import os
 import re
 
+def test_init_data():
+    """ 테스트 실행을 위한 데이터 삽입 """
+    app = create_app()
+
+    with TestClient(app) as client:
+        response = client.post(f"/Auth/register/", json={"email": test_receiver})
+        assert response.status_code == 200
+        json_data = response.json()
+
+        assert json_data["status"] == 200
+
 
 @pytest.mark.parametrize("service_name", ["deepl", "openai"])
 def test_translate_integration(service_name):
