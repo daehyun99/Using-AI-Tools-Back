@@ -1,6 +1,8 @@
-from app.database.schema import USERS
+from app.database.schema import USERS, SERVICE_USAGE
 from sqlalchemy.orm import Session
 
+# ========================
+# USERS
 def create_user(session: Session, uuid: str, email: str, password_hash: str, service_enabled: bool):
     """ DB 저장 """
     user = USERS(
@@ -28,3 +30,14 @@ def update_user(session: Session, email: str, password_hash: str, service_enable
         return user
     else:
         ... # return 오류메시지 (로깅은 Auth.py에서)
+
+# ========================
+# SERVICE_USAGE
+def create_service_usage(session: Session, uuid: str, correlation_id: str):
+    """ DB 저장 """
+    service_usage = SERVICE_USAGE(
+        uuid= uuid,
+        correlation_id= correlation_id
+    )
+    session.add(service_usage)
+    session.commit()

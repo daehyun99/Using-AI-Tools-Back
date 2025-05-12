@@ -17,7 +17,7 @@ router = APIRouter(prefix="/email")
 layer = "PRESENTATION"
 
 @router.post("/send/")
-async def send_email(file_path, receiver, session, correlation_id):
+async def send_email(file_path, receiver, session, correlation_id): # 번역본 전송 API
     """
     `Email API`
     :return:
@@ -35,7 +35,7 @@ async def send_email(file_path, receiver, session, correlation_id):
 
 
 @router.post("/send_id_pw/")
-async def send_email_id_pw(id, pw, email, session, correlation_id):
+async def send_email_id_pw(id, pw, email, session, correlation_id): # id, pw 전송 API
     """
     `Email API`
     :return id, pw:

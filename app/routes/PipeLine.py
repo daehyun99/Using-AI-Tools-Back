@@ -16,6 +16,7 @@ from app.common.utils import logging_response
 
 from sqlalchemy.orm import Session
 from app.database.conn import db
+from app.database.crud import read_user_by_email, create_service_usage
 
 layer = "PRESENTATION"
 
@@ -39,9 +40,13 @@ async def Translate(file: UploadFile, service: TranslateService, email_address: 
 
         document.mono_path = os.path.join(f"{DOCS_SAVE_PATH}", mono_document_title_ext)
         document.dual_path = os.path.join(f"{DOCS_SAVE_PATH}", dual_document_title_ext)
-        
+
+        user = read_user_by_email(session=session, email=email_address)
+        create_service_usage(session=session, uuid=user.uuid, correlation_id=correlation_id)
+
         backgroundtasks.add_task(send_email, file_path=document.mono_path, receiver=email_address,session=session, correlation_id=correlation_id)
-        backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)
+        # backgroundtasks.add_task() # 해당 이메일 주소의 번역 가능 횟수 차감
+        backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)        
 
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
