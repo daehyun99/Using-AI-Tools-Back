@@ -26,3 +26,10 @@ class TranslateService(str, Enum):
 class Email(BaseModel):
     """Email 모델"""
     email: Optional[str] = None
+
+class OneTimeAuth(BaseModel):
+    """OneTimeAuth 모델"""
+    uuid: Optional[str] = None
+    password: Optional[str] = None
+
+
