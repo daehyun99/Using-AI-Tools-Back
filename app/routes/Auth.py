@@ -93,7 +93,7 @@ def one_time_auth(auth: OneTimeAuth, session: Session = Depends(db.get_db)):
             error_message = ex.ErrorResponse()
             return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
         
-        success_message = SuccessResponse()
+        success_message = SuccessResponse(data= {"email": user.email})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)
