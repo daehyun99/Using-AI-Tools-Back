@@ -36,14 +36,18 @@ async def Translate(file: UploadFile, service: TranslateService, email_address: 
         result = await upload_file(file, session=session, correlation_id=correlation_id)
         document = Document_(path=result.data["path"])
 
-        mono_document_title_ext, dual_document_title_ext, new_document_path = await translate_(document.path, service, session=session, correlation_id=correlation_id)
+        user = read_user_by_email(session=session, email=email_address)
+        create_service_usage(session=session, uuid=user.uuid, correlation_id=correlation_id)
+
+        base_name = os.path.basename(document.path)
+        document_title, document_ext = os.path.splitext(base_name)
+        mono_document_title_ext = f"{document_title}" + "-mono" + f"{document_ext}"
+        dual_document_title_ext = f"{document_title}" + "-dual" + f"{document_ext}"
 
         document.mono_path = os.path.join(f"{DOCS_SAVE_PATH}", mono_document_title_ext)
         document.dual_path = os.path.join(f"{DOCS_SAVE_PATH}", dual_document_title_ext)
 
-        user = read_user_by_email(session=session, email=email_address)
-        create_service_usage(session=session, uuid=user.uuid, correlation_id=correlation_id)
-
+        backgroundtasks.add_task(translate_, document.path, service, session=session, correlation_id=correlation_id)
         backgroundtasks.add_task(send_email, file_path=document.mono_path, receiver=email_address,session=session, correlation_id=correlation_id)
         # backgroundtasks.add_task() # 해당 이메일 주소의 번역 가능 횟수 차감
         backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)        

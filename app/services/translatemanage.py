@@ -16,9 +16,6 @@ layer = "BUSINESS"
 
 async def translate_(document_path, service, session, correlation_id):
     try:
-        base_name = os.path.basename(document_path)
-        document_title, document_ext = os.path.splitext(base_name)
-
         if not os.path.exists(DOCS_SAVE_PATH):
             os.makedirs(DOCS_SAVE_PATH)
 
@@ -31,12 +28,8 @@ async def translate_(document_path, service, session, correlation_id):
 
         result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
 
-        mono_document_title_ext = f"{document_title}" + "-mono" + f"{document_ext}"
-        dual_document_title_ext = f"{document_title}" + "-dual" + f"{document_ext}"
-
-        new_document_path = os.path.join(f"{DOCS_SAVE_PATH}", mono_document_title_ext)
         success_message = SuccessResponse()
-        return mono_document_title_ext, dual_document_title_ext, new_document_path
+        return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
