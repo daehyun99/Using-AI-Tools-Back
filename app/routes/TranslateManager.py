@@ -17,6 +17,7 @@ from app.common.utils import logging_response
 from sqlalchemy.orm import Session
 from app.database.conn import db
 from app.database.crud import read_user_by_email, create_service_usage
+from app.database.crud import update_user
 
 layer = "PRESENTATION"
 
@@ -49,7 +50,7 @@ async def Translate(file: UploadFile, service: TranslateService, email_address: 
 
         backgroundtasks.add_task(translate_, document.path, service, session=session, correlation_id=correlation_id)
         backgroundtasks.add_task(send_email, file_path=document.mono_path, receiver=email_address,session=session, correlation_id=correlation_id)
-        # backgroundtasks.add_task() # 해당 이메일 주소의 번역 가능 횟수 차감
+        backgroundtasks.add_task(update_user, session=session, email=user.email, password_hash=user.password_hash, service_enabled=False)
         backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)        
 
         success_message = SuccessResponse()
