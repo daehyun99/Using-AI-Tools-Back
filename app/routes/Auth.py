@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Request, Depends, BackgroundTasks
 from app.models import Email, OneTimeAuth
 
 import bcrypt
@@ -22,7 +22,7 @@ layer = "PRESENTATION"
 router = APIRouter(prefix="/Auth")
 
 @router.post("/register/")
-async def register(email: Email, session: Session = Depends(db.get_db)):
+async def register(email: Email, backgroundtasks: BackgroundTasks, session: Session = Depends(db.get_db)):
     """
     `Auth API`
     :param ID, PW, Email:
@@ -43,7 +43,7 @@ async def register(email: Email, session: Session = Depends(db.get_db)):
         password_hash = bcrypt.hashpw(pw.encode("utf-8"), bcrypt.gensalt())
         create_user(session=session, uuid=id, email=email.email, password_hash=password_hash, service_enabled=True)
         
-        await send_email_id_pw(id, pw, email.email, session=session, correlation_id=correlation_id)
+        backgroundtasks.add_task(send_email_id_pw, id, pw, email.email, session=session, correlation_id=correlation_id)
 
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
@@ -52,7 +52,7 @@ async def register(email: Email, session: Session = Depends(db.get_db)):
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=error_message)
     
 @router.post("/re-register/")
-async def re_register(session: Session = Depends(db.get_db)):
+async def re_register(backgroundtasks: BackgroundTasks, session: Session = Depends(db.get_db)):
     """
     `Auth API`
 
@@ -68,7 +68,7 @@ async def re_register(session: Session = Depends(db.get_db)):
         password_hash = bcrypt.hashpw(pw.encode("utf-8"), bcrypt.gensalt())
         user = update_user(session=session, email=email, password_hash=password_hash, service_enabled=True)
 
-        await send_email_id_pw(user.uuid, pw, user.email, session=session, correlation_id=correlation_id)
+        backgroundtasks.add_task(send_email_id_pw, user.uuid, pw, user.email, session=session, correlation_id=correlation_id)
 
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
