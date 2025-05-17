@@ -1,5 +1,7 @@
 FROM python:3.10-slim
 
+RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/lib/apt/lists/*
+
 RUN apt-get update && \
     apt-get install -y locales ffmpeg build-essential python3-dev iputils-ping && \
     echo "ko_KR.UTF-8 UTF-8" > /etc/locale.gen && \

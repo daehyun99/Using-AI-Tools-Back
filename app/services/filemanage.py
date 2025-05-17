@@ -1,5 +1,6 @@
 import os
 import aiofiles
+from pathlib import Path
 
 from app.common.config import base_dir
 from app.common.const import DOCS_SAVE_PATH
@@ -22,6 +23,8 @@ def delete_file_(file_path, session, correlation_id):
 
 async def upload_file_(file, session, correlation_id, DOCS_SAVE_PATH=DOCS_SAVE_PATH):
     try:
+        Path(DOCS_SAVE_PATH).mkdir(parents=True, exist_ok=True)
+        
         file_path = f"{DOCS_SAVE_PATH}/{file.filename}"
         async with aiofiles.open(file_path, 'wb') as out_file:
             content = await file.read()
