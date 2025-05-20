@@ -1,5 +1,6 @@
 import os
 import aiofiles
+from pathlib import Path
 
 from app.common.config import base_dir
 from app.common.const import DOCS_SAVE_PATH
@@ -32,6 +33,8 @@ async def upload_file_(file, session, correlation_id, DOCS_SAVE_PATH=DOCS_SAVE_P
         success_message = SuccessRequest()
         logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
 
+        Path(DOCS_SAVE_PATH).mkdir(parents=True, exist_ok=True)
+        
         file_path = f"{DOCS_SAVE_PATH}/{file.filename}"
         async with aiofiles.open(file_path, 'wb') as out_file:
             content = await file.read()
