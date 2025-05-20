@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi import FastAPI, UploadFile
+from fastapi.responses import FileResponse
 
 import os
 from app.models import Document_
@@ -7,9 +8,10 @@ from app.services.filemanage import delete_file_, upload_file_, rename_file_
 
 from app.database.conn import db
 
-from fastapi.responses import FileResponse
+from app.api.request import SuccessRequest
 from app.api.response import SuccessResponse
-from app.common.utils import logging_response
+
+from app.common.utils import logging_request, logging_response
 from app.common.utils import generate_metadata
 
 from app.api import exceptions as ex
@@ -27,7 +29,8 @@ async def download_file(document: Document_, session, correlation_id):
     :return docs:
     """
     try:
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
         document_name = os.path.basename(document.path)
         return FileResponse(path=document.path, filename=f"{document_name}")
     except Exception as e:
@@ -42,11 +45,14 @@ async def delete_file(document: Document_, session, correlation_id):
     :return:
     """
     try:
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
+
         delete_file_(document.path, session=session, correlation_id=correlation_id)
         if (document.mono_path is not None) and (document.dual_path is not None):
             delete_file_(document.mono_path, session=session, correlation_id=correlation_id)
             delete_file_(document.dual_path, session=session, correlation_id=correlation_id)
+            
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
@@ -62,7 +68,8 @@ async def upload_file(file: UploadFile, session, correlation_id):
     :return:
     """
     try:
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
         file_path = await upload_file_(file, session=session, correlation_id=correlation_id)
         success_message = SuccessResponse(data={"path": file_path.data["path"]})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
@@ -79,7 +86,8 @@ async def rename_file(document: Document_, session, correlation_id):
     :return:
     """
     try:
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
         rename_file_(session=session, correlation_id=correlation_id)
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)

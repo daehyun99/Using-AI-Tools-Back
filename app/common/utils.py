@@ -1,5 +1,8 @@
 from app.database.schema import SYSTEM_LOGS
+
+from app.api.request import SuccessRequest
 from app.api.response import SuccessResponse
+
 from sqlalchemy.orm import Session
 import json
 
@@ -42,13 +45,15 @@ def is_valid_email(email: str) -> bool:
         return False
     
 
-def logging_request(session: Session, layer: str, correlation_id: str, msg: str, metadata: dict):
+def logging_request(session: Session, layer: str, correlation_id: str, obj: SuccessRequest):
+    """ DB에 로깅 """
     log = SYSTEM_LOGS(
         layer = layer,
         log_type="REQUEST",
         correlation_id=correlation_id,
-        msg=msg,
-        data=metadata  # 요청의 경우 data 필드에 metadata 기록
+        msg=obj.msg,
+        data=obj.data,  # metadata
+        error=obj.error
     )
     session.add(log)
     session.commit()

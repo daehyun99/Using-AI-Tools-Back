@@ -11,9 +11,12 @@ from app.database.crud import create_user
 from app.database.crud import read_user_by_email, read_user_by_uuid
 from app.database.crud import update_user
 
+from app.api.request import SuccessRequest
 from app.api.response import SuccessResponse
+
 from app.api import exceptions as ex
-from app.common.utils import logging_response
+
+from app.common.utils import logging_request, logging_response
 
 from app.common.config import test_receiver # 임시
 
@@ -30,7 +33,8 @@ async def register(email: Email, backgroundtasks: BackgroundTasks, session: Sess
     """
     try:
         correlation_id = generate_metadata()
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
 
         if not is_valid_email(email.email):
             error_message = ex.ErrorResponse(ex="이메일 형식이 맞지 않습니다.")
@@ -60,7 +64,8 @@ async def re_register(backgroundtasks: BackgroundTasks, session: Session = Depen
     """
     try:
         correlation_id = generate_metadata()
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
 
         email = test_receiver # 임시
 
@@ -85,7 +90,8 @@ def one_time_auth(auth: OneTimeAuth, session: Session = Depends(db.get_db)):
     """
     try:
         correlation_id = generate_metadata()
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
 
         user = read_user_by_uuid(session=session, uuid=auth.uuid)
 

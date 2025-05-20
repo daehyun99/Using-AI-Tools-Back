@@ -10,9 +10,10 @@ import os
 from app.models import Document_, TranslateService
 from fastapi import UploadFile, BackgroundTasks
 
+from app.api.request import SuccessRequest
 from app.api.response import SuccessResponse
 from app.api import exceptions as ex
-from app.common.utils import logging_response
+from app.common.utils import logging_request, logging_response
 
 from sqlalchemy.orm import Session
 from app.database.conn import db
@@ -32,7 +33,8 @@ async def Translate(file: UploadFile, service: TranslateService, email_address: 
     """
     try:
         correlation_id = generate_metadata()
-        # logging_request
+        success_message = SuccessRequest(data={"file": file.filename, "service": service, "email_address": email_address})
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
         
         result = await upload_file(file, session=session, correlation_id=correlation_id)
         document = Document_(path=result.data["path"])

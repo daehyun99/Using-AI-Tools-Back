@@ -3,16 +3,23 @@ import aiofiles
 
 from app.common.config import base_dir
 from app.common.const import DOCS_SAVE_PATH
+
+from app.api.request import SuccessRequest
 from app.api.response import SuccessResponse
+
 from app.api import exceptions as ex
 
-from app.common.utils import logging_response
+from app.common.utils import logging_request, logging_response
 
 layer = "BUSINESS"
 
 def delete_file_(file_path, session, correlation_id):
     try:
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
+
         os.remove(f'{file_path}')
+        
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
@@ -22,6 +29,9 @@ def delete_file_(file_path, session, correlation_id):
 
 async def upload_file_(file, session, correlation_id, DOCS_SAVE_PATH=DOCS_SAVE_PATH):
     try:
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
+
         file_path = f"{DOCS_SAVE_PATH}/{file.filename}"
         async with aiofiles.open(file_path, 'wb') as out_file:
             content = await file.read()
@@ -35,6 +45,9 @@ async def upload_file_(file, session, correlation_id, DOCS_SAVE_PATH=DOCS_SAVE_P
 
 async def rename_file_(session, correlation_id):
     try:
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
+        
         ...
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)

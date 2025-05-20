@@ -1,4 +1,4 @@
-from app.common.utils import logging_response
+from app.common.utils import logging_request, logging_response
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -8,7 +8,9 @@ from email.mime.image import MIMEImage
 
 from app.common.config import sender, smtp_server, smtp_port, login_id, login_pw, survey_form_url
 
+from app.api.request import SuccessRequest
 from app.api.response import SuccessResponse
+
 from app.api import exceptions as ex
 
 layer = "BUSINESS"
@@ -19,7 +21,8 @@ def send_email_(file_path, receiver, session, correlation_id):
     :return:
     """
     try:
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
 
         subject = "[Using-AI-tools] 요청하신 논문 번역본 송부드립니다."
         receiver_name = receiver.split("@")[0]
@@ -85,7 +88,8 @@ async def send_email2_(id, pw, email, session, correlation_id):
     :return:
     """
     try:
-        # logging_request
+        success_message = SuccessRequest()
+        logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
 
         subject = "[Using-AI-tools] 고유 ID와 PW 발급"
         receiver_name = email.split("@")[0]
