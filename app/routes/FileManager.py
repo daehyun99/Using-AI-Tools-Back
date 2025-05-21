@@ -9,7 +9,7 @@ from app.services.filemanage import delete_file_, upload_file_, rename_file_
 from app.database.conn import db
 
 from app.api.request import SuccessRequest
-from app.api.response import SuccessResponse
+from app.api.response import SuccessResponse, FailResponse
 
 from app.common.utils import logging_request, logging_response
 from app.common.utils import generate_metadata
@@ -31,7 +31,10 @@ async def download_file(document: Document_, session, correlation_id):
     try:
         success_message = SuccessRequest()
         logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
+
         document_name = os.path.basename(document.path)
+
+        success_message = SuccessResponse() # 수정 필요
         return FileResponse(path=document.path, filename=f"{document_name}")
     except Exception as e:
         error_message = ex.ErrorResponse_File(ex=e)
@@ -70,7 +73,9 @@ async def upload_file(file: UploadFile, session, correlation_id):
     try:
         success_message = SuccessRequest()
         logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
+
         file_path = await upload_file_(file, session=session, correlation_id=correlation_id)
+
         success_message = SuccessResponse(data={"path": file_path.data["path"]})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
@@ -88,7 +93,9 @@ async def rename_file(document: Document_, session, correlation_id):
     try:
         success_message = SuccessRequest()
         logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
+
         rename_file_(session=session, correlation_id=correlation_id)
+
         success_message = SuccessResponse()
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:

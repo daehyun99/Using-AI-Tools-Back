@@ -32,4 +32,11 @@ class SuccessResponse(APIResponse):
             data=data
         )
 
-
+class FailResponse(APIResponse):
+    def __init__(self, msg: str = "❎ FailResponse", data= None):
+        super().__init__(
+            status=StatusCode.SUCCESS,
+            msg=msg,
+            error=None,
+            data=data
+        )

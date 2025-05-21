@@ -11,7 +11,7 @@ from app.models import Document_, TranslateService
 from fastapi import UploadFile, BackgroundTasks
 
 from app.api.request import SuccessRequest
-from app.api.response import SuccessResponse
+from app.api.response import SuccessResponse, FailResponse
 from app.api import exceptions as ex
 from app.common.utils import logging_request, logging_response
 
@@ -55,7 +55,7 @@ async def Translate(file: UploadFile, service: TranslateService, email_address: 
         backgroundtasks.add_task(update_user, session=session, email=user.email, password_hash=user.password_hash, service_enabled=False)
         backgroundtasks.add_task(delete_file, document, session=session, correlation_id=correlation_id)        
 
-        success_message = SuccessResponse()
+        success_message = SuccessResponse(msg="✅ 파일 번역 중입니다. 번역 완료 후, 이메일로 전송드리겠습니다.")
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)

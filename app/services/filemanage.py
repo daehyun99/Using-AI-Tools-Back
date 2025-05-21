@@ -6,7 +6,7 @@ from app.common.config import base_dir
 from app.common.const import DOCS_SAVE_PATH
 
 from app.api.request import SuccessRequest
-from app.api.response import SuccessResponse
+from app.api.response import SuccessResponse, FailResponse
 
 from app.api import exceptions as ex
 
