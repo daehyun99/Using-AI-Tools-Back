@@ -24,19 +24,19 @@ class APIResponse():
 
 
 class SuccessResponse(APIResponse):
-    def __init__(self, msg: str = "✅ SuccessResponse", data= None):
+    def __init__(self, msg: str = "SuccessResponse", data= None):
         super().__init__(
             status=StatusCode.SUCCESS,
-            msg=msg,
+            msg= "✅ "+msg,
             error=None,
             data=data
         )
 
 class FailResponse(APIResponse):
-    def __init__(self, msg: str = "❎ FailResponse", data= None):
+    def __init__(self, msg: str = "FailResponse", data= None):
         super().__init__(
             status=StatusCode.SUCCESS,
-            msg=msg,
+            msg= "🛑 "+msg,
             error=None,
             data=data
         )

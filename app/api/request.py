@@ -23,10 +23,10 @@ class APIRequest():
 # ================================================================================ #
 
 class SuccessRequest(APIRequest):
-    def __init__(self, msg: str = "✅ SuccessRequest", data= None):
+    def __init__(self, msg: str = "SuccessRequest", data= None):
         super().__init__(
             status=StatusCode.SUCCESS,
-            msg=msg,
+            msg= "✅ "+msg,
             error=None,
             data=data
         )
