@@ -17,6 +17,7 @@ from app.api.response import SuccessResponse, FailResponse
 from app.api import exceptions as ex
 
 from app.common.utils import logging_request, logging_response
+from app.common.utils import mask_email, mask_id
 
 from app.common.config import test_receiver # 임시
 
@@ -37,10 +38,13 @@ async def register(email: Email, backgroundtasks: BackgroundTasks, session: Sess
         logging_request(session=session, layer=layer, correlation_id=correlation_id, obj=message)
 
         if not is_valid_email(email.email):
-            message = FailResponse(msg="❎ 이메일 형식이 맞지 않습니다.")
+            masked_email = mask_email(email.email)
+            message = FailResponse(msg="이메일 형식이 맞지 않습니다.", data= {"email": masked_email})
             return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=message)
+        
         if read_user_by_email(session=session, email=email.email):
-            message = FailResponse(msg="❎ 이미 존재하는 이메일입니다.")
+            masked_email = mask_email(email.email)
+            message = FailResponse(msg="이미 존재하는 이메일입니다.", data= {"email": masked_email})
             return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=message)
         
         id, pw = generate_id(), generate_pw()
@@ -49,7 +53,8 @@ async def register(email: Email, backgroundtasks: BackgroundTasks, session: Sess
         
         backgroundtasks.add_task(send_email_id_pw, id, pw, email.email, session=session, correlation_id=correlation_id)
 
-        message = SuccessResponse(msg="✅ ID와 PW가 발급되었습니다. 이메일을 확인해주세요.")
+        masked_id = mask_id(id)
+        message = SuccessResponse(msg="ID와 PW가 발급되었습니다. 이메일을 확인해주세요.", data= {"id": masked_id})
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=message)
     except Exception as e:
         message = ex.ErrorResponse(ex=e)
@@ -75,7 +80,7 @@ async def re_register(backgroundtasks: BackgroundTasks, session: Session = Depen
 
         backgroundtasks.add_task(send_email_id_pw, user.uuid, pw, user.email, session=session, correlation_id=correlation_id)
 
-        success_message = SuccessResponse(msg="✅ ID와 PW가 재발급되었습니다. 이메일을 확인해주세요.")
+        success_message = SuccessResponse(msg="ID와 PW가 재발급되었습니다. 이메일을 확인해주세요.")
         return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=success_message)
     except Exception as e:
         error_message = ex.ErrorResponse(ex=e)
@@ -96,11 +101,11 @@ def one_time_auth(auth: OneTimeAuth, session: Session = Depends(db.get_db)):
         user = read_user_by_uuid(session=session, uuid=auth.uuid)
 
         if user.uuid != auth.uuid or not bcrypt.checkpw(auth.password.encode("utf-8"), user.password_hash.encode("utf-8")):
-            message = FailResponse(msg="❎ ID 또는 PW를 확인해주세요.")
+            message = FailResponse(msg="ID 또는 PW를 확인해주세요.")
             return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=message)
         
         if not user.service_enabled == True:
-            message = FailResponse(msg="❎ 번역 가능횟수가 없습니다.")
+            message = FailResponse(msg="번역 가능횟수가 없습니다.")
             return logging_response(session=session, layer=layer, correlation_id=correlation_id, obj=message)
         
         message = SuccessResponse(data= {"email": user.email})

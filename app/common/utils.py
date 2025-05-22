@@ -52,7 +52,7 @@ def logging_request(session: Session, layer: str, correlation_id: str, obj: Succ
         log_type="REQUEST",
         correlation_id=correlation_id,
         msg=obj.msg,
-        data=obj.data,  # metadata
+        data=obj.data,
         error=obj.error
     )
     session.add(log)
@@ -72,3 +72,15 @@ def logging_response(session: Session, layer: str, correlation_id: str, obj: Suc
     session.add(log)
     session.commit()
     return obj
+
+def mask_email(email: str) -> str:
+    """ 이메일 마스킹 """
+    len_email = len(email.split("@")[0])
+    len_email_mask = len_email // 2
+    return email.split("@")[0][:len_email_mask] + "*" * len_email_mask
+
+def mask_id(id: str) -> str:
+    """ ID 마스킹 """
+    len_id = len(id)
+    len_id_mask = len_id // 2
+    return id[:len_id_mask] + "*" * len_id_mask

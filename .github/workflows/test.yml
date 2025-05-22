@@ -2,9 +2,9 @@ name: pytest docker compose
 
 on:
     push:
-      branches: [ main, deploy/v1.0.0, deploy/v0.8.0 ]
+      branches: [ main, deploy/v1.0.0, deploy/v0.9.0 ]
     pull_request:
-      branches: [ main ]
+      branches: [ main, deploy/v1.0.0 ]
 
 jobs:
   test:
